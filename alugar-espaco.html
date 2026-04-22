@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Casa Nanquim — Aluguel de Espaço para Tatuadores">
+  <meta name="theme-color" content="#f5f3ef">
+  <title>Alugar Espaço | Casa Nanquim</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* ============================================================
+       CASA NANQUIM — ALUGAR ESPAÇO — SISTEMA DE DESIGN
+       ============================================================ */
+    :root {
+      --paper:       #f5f3ef;
+      --paper-card:  #ffffff;
+      --ink:         #1a1a1a;
+      --ink-mid:     #2d2d2d;
+      --ink-light:   #555;
+      --ink-soft:    rgba(26,26,26,0.05);
+      --ink-border:  rgba(26,26,26,0.10);
+      --ink-border2: rgba(26,26,26,0.16);
+      --font-d: 'Playfair Display', serif;
+      --font-b: 'Inter', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { overflow-x: hidden; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-b);
+      overflow-x: hidden;
+    }
+
+    /* ===== PAPER TEXTURE ===== */
+    .paper-texture {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ===== INK BLOBS ===== */
+    .ink-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .ink-blob {
+      position: absolute;
+      border-radius: 60% 40% 50% 50% / 45% 50% 50% 55%;
+      filter: blur(40px);
+      animation: blobFloat 28s ease-in-out infinite;
+    }
+    .ink-blob:nth-child(1) {
+      width: 520px; height: 520px; top: -180px; left: -180px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.07), transparent);
+    }
+    .ink-blob:nth-child(2) {
+      width: 600px; height: 600px; bottom: -250px; right: -200px;
+      animation-duration: 34s;
+      background: radial-gradient(ellipse, rgba(30,30,30,0.05), transparent);
+    }
+    .ink-blob:nth-child(3) {
+      width: 300px; height: 300px; top: 45%; left: 65%;
+      animation-duration: 20s;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.04), transparent);
+    }
+    @keyframes blobFloat {
+      0%,100% { transform: translate(0,0); border-radius: 60% 40% 50% 50%/45% 50% 50% 55%; }
+      33%     { transform: translate(30px,-20px); }
+      66%     { transform: translate(-20px,20px); }
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: rgba(245,243,239,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--ink-border);
+      padding: 1rem 0;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .navbar-brand {
+      font-family: var(--font-d);
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--ink) !important;
+      letter-spacing: -0.5px;
+    }
+    .nav-back {
+      font-size: 0.74rem; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--ink-light) !important;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.55; color: var(--ink-light); }
+
+    /* ===== PAGE WRAPPER ===== */
+    .page-wrapper {
+      position: relative; z-index: 10;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 56px 20px 80px;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .page-badge {
+      display: inline-block;
+      font-size: 0.62rem; letter-spacing: 4px;
+      text-transform: uppercase; color: #888;
+      background: var(--ink-soft);
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      margin-bottom: 1.4rem;
+    }
+    .page-header h1 {
+      font-family: var(--font-d);
+      font-size: 3rem; font-weight: 800;
+      letter-spacing: -1.5px; line-height: 1;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .page-header p {
+      font-size: 0.9rem; color: var(--ink-light);
+      line-height: 1.7;
+    }
+    .header-divider {
+      width: 40px; height: 2px;
+      background: var(--ink); opacity: 0.15;
+      margin: 20px auto 0;
+    }
+
+    /* ===== ALERT ===== */
+    .alert-success {
+      background: #d4edda;
+      border: 1px solid rgba(46,125,82,0.25);
+      color: #2e7d52;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .alert-error {
+      background: #fde0e0;
+      border: 1px solid rgba(176,32,32,0.2);
+      color: #b02020;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 16px;
+    }
+
+    /* ===== PERIOD CARDS ===== */
+    .precos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    .preco-card {
+      background: var(--paper-card);
+      border: 1.5px solid var(--ink-border);
+      border-radius: 16px;
+      padding: 22px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+    .preco-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--ink);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .preco-card:hover {
+      border-color: var(--ink-border2);
+      box-shadow: 0 6px 24px rgba(26,26,26,0.08);
+      transform: translateY(-2px);
+    }
+    .preco-card.selected {
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+    .preco-card.selected::before { opacity: 0; }
+    .preco-card.selected .preco-periodo,
+    .preco-card.selected .preco-valor,
+    .preco-card.selected .preco-desc { color: var(--paper) !important; }
+
+    .preco-periodo {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+    .preco-valor {
+      font-family: var(--font-d);
+      font-size: 2rem; font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .preco-desc {
+      font-size: 0.74rem;
+      color: var(--ink-light);
+    }
+
+    /* ===== FORM CARD ===== */
+    .form-card {
+      background: var(--paper-card);
+      border: 1px solid var(--ink-border);
+      border-radius: 20px;
+      padding: 36px 36px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 24px rgba(26,26,26,0.04);
+    }
+    .form-card-title {
+      font-family: var(--font-d);
+      font-size: 1.2rem; font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--ink-border);
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .form-group { margin-bottom: 20px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--paper);
+      border: 1px solid var(--ink-border2);
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: var(--font-b);
+      font-size: 0.88rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #bbb; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px var(--ink-soft);
+      background: #fff;
+    }
+    .form-group input:disabled,
+    .form-group select:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .info-hint {
+      font-size: 0.72rem;
+      color: #aaa;
+      margin-top: 6px;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ===== VALOR TOTAL ===== */
+    .valor-total-box {
+      background: var(--ink);
+      border-radius: 14px;
+      padding: 22px 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .valor-total-label {
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(245,243,239,0.45);
+      margin-bottom: 6px;
+    }
+    .valor-total-num {
+      font-family: var(--font-d);
+      font-size: 2.4rem; font-weight: 700;
+      color: var(--paper);
+      letter-spacing: -1px;
+    }
+    .valor-total-num.placeholder {
+      font-size: 1rem;
+      font-family: var(--font-b);
+      opacity: 0.4;
+      letter-spacing: 0;
+    }
+    /* Hidden input keeps the backend value, box is the display */
+    #valorTotal { display: none; }
+
+    /* ===== BTN SUBMIT ===== */
+    .btn-submit {
+      width: 100%;
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      padding: 15px 24px;
+      border-radius: 12px;
+      font-family: var(--font-b);
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-submit:hover {
+      background: var(--ink-mid);
+      transform: translateY(-1px);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* ===== BACK LINK ===== */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #999;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--ink); }
+
+    /* ===== PERKS ROW ===== */
+    .perks {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 36px; justify-content: center;
+    }
+    .perk {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.72rem; font-weight: 500;
+      color: var(--ink-light);
+      background: var(--ink-soft);
+      padding: 6px 14px;
+      border-radius: 24px;
+      border: 1px solid var(--ink-border);
+    }
+    .perk i { font-size: 0.65rem; opacity: 0.7; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .page-header h1 { font-size: 2.2rem; }
+      .precos { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="paper-texture"></div>
+  <div class="ink-canvas">
+    <div class="ink-blob"></div>
+    <div class="ink-blob"></div>
+    <div class="ink-blob"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container d-flex align-items-center justify-content-between">
+      <span class="navbar-brand">Casa Nanquim</span>
+      <a href="index.html" class="nav-back">
+        <i class="fas fa-arrow-left" style="font-size:0.65rem;"></i> Voltar ao site
+      </a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="page-wrapper">
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="page-badge">Espaço para Tatuadores</div>
+      <h1>Alugue nosso espaço</h1>
+      <p>Ambiente profissional, equipamentos inclusos e localização central.<br>Reserve seu dia e traga seus clientes.</p>
+      <div class="header-divider"></div>
+    </div>
+
+    <!-- Perks -->
+    <div class="perks">
+      <span class="perk"><i class="fas fa-tools"></i> Equipamentos inclusos</span>
+      <span class="perk"><i class="fas fa-snowflake"></i> Ambiente climatizado</span>
+      <span class="perk"><i class="fas fa-map-marker-alt"></i> Localização central</span>
+      <span class="perk"><i class="fas fa-wifi"></i> Wi-Fi gratuito</span>
+    </div>
+
+    <!-- Alert -->
+    <div id="alertMessage"></div>
+
+    <!-- Period Selection -->
+    <p class="section-label">Escolha o período</p>
+    <div class="precos" id="precosContainer"></div>
+
+    <!-- Reservation form -->
+    <div class="form-card">
+      <div class="form-card-title">Detalhes da Reserva</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fas fa-calendar" style="opacity:.5;margin-right:4px;"></i> Data da reserva</label>
+          <input type="date" id="dataReserva" min="">
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-clock" style="opacity:.5;margin-right:4px;"></i> Horário de início</label>
+          <select id="horarioInicio">
+            <option value="">Selecione...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-clock" style="opacity:.5;margin-right:4px;"></i> Horário de fim</label>
+        <select id="horarioFim" disabled>
+          <option value="">Será preenchido automaticamente</option>
+        </select>
+        <p class="info-hint" id="infoHorarioFim">
+          <i class="fas fa-info-circle"></i>
+          <span>Calculado automaticamente conforme o período selecionado</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">Seus Dados</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome completo *</label>
+          <input type="text" id="nome" placeholder="Seu nome" required>
+        </div>
+        <div class="form-group">
+          <label>WhatsApp *</label>
+          <input type="tel" id="whatsapp" placeholder="(11) 99999-9999" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="email" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Instagram</label>
+          <input type="text" id="instagram" placeholder="@seuinstagram">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Especialidade</label>
+        <input type="text" id="especialidade" placeholder="Ex: Realismo, Aquarela, Blackwork…">
+      </div>
+
+      <div class="form-group">
+        <label>Observações</label>
+        <textarea id="observacao" placeholder="Alguma informação adicional que possamos saber?"></textarea>
+      </div>
+    </div>
+
+    <!-- Valor Total Display -->
+    <div class="valor-total-box">
+      <div class="valor-total-label">Valor Total</div>
+      <div class="valor-total-num placeholder" id="valorTotalDisplay">Selecione um período</div>
+    </div>
+    <!-- Hidden input for backend -->
+    <input type="text" id="valorTotal" readonly>
+
+    <button class="btn-submit" id="btnReservar">
+      <i class="fas fa-calendar-check"></i> Solicitar Reserva
+    </button>
+
+    <div style="text-align:center;">
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left" style="font-size:0.65rem;"></i> Voltar para o site
+      </a>
+    </div>
+
+  </div><!-- /page-wrapper -->
+
+  <script>
+    /* ============================================================
+       BACKEND — não alterar
+       ============================================================ */
+    const API_URL = 'http://localhost:8888/CasaNanquim/api';
+
+    const VALOR_2_HORAS      = 80;
+    const VALOR_MEIO_PERIODO = 150;
+    const VALOR_DIA_INTEIRO  = 250;
+
+    let selectedPreco       = null;
+    let horariosDisponiveis = [];
+
+    /* ---------- DATA MÍNIMA ---------- */
+    function configurarDataMinima() {
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      const mes  = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia  = String(hoje.getDate()).padStart(2, '0');
+      document.getElementById('dataReserva').setAttribute('min', `${ano}-${mes}-${dia}`);
+    }
+
+    /* ---------- HELPERS ---------- */
+    function isDataHoje(data) {
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      const mes  = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia  = String(hoje.getDate()).padStart(2, '0');
+      return data === `${ano}-${mes}-${dia}`;
+    }
+
+    function isHorarioPassado(horario) {
+      const agora    = new Date();
+      const horaAtual   = agora.getHours();
+      const minutoAtual = agora.getMinutes();
+      const [hora, minuto] = horario.split(':').map(Number);
+      if (hora < horaAtual) return true;
+      if (hora === horaAtual && minuto <= minutoAtual) return true;
+      return false;
+    }
+
+    /* ---------- CARREGA CARTÕES DE PREÇO ---------- */
+    function carregarPrecos() {
+      const container = document.getElementById('precosContainer');
+      container.innerHTML = `
+        <div class="preco-card" data-tipo="2_HORAS" data-valor="${VALOR_2_HORAS}" data-duracao="2">
+          <div class="preco-periodo">2 horas</div>
+          <div class="preco-valor">R$&nbsp;${VALOR_2_HORAS}</div>
+          <div class="preco-desc">Sessões rápidas</div>
+        </div>
+        <div class="preco-card" data-tipo="MEIO_PERIODO" data-valor="${VALOR_MEIO_PERIODO}" data-duracao="4">
+          <div class="preco-periodo">Meio período</div>
+          <div class="preco-valor">R$&nbsp;${VALOR_MEIO_PERIODO}</div>
+          <div class="preco-desc">4 horas</div>
+        </div>
+        <div class="preco-card" data-tipo="DIA_INTEIRO" data-valor="${VALOR_DIA_INTEIRO}" data-duracao="8">
+          <div class="preco-periodo">Dia inteiro</div>
+          <div class="preco-valor">R$&nbsp;${VALOR_DIA_INTEIRO}</div>
+          <div class="preco-desc">8 horas</div>
+        </div>
+      `;
+
+      document.querySelectorAll('.preco-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.preco-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+
+          selectedPreco = {
+            tipo:      card.dataset.tipo,
+            valorBase: parseFloat(card.dataset.valor),
+            duracao:   parseInt(card.dataset.duracao)
+          };
+
+          configurarSelectHorarioFim();
+
+          const inicio = document.getElementById('horarioInicio').value;
+          if (inicio) calcularHorarioFimAutomatico();
+
+          calcularValorTotal();
+        });
+      });
+    }
+
+    /* ---------- SELECT HORÁRIO FIM ---------- */
+    function configurarSelectHorarioFim() {
+      const selectFim = document.getElementById('horarioFim');
+      selectFim.disabled = true;
+      document.getElementById('infoHorarioFim').innerHTML =
+        '<i class="fas fa-info-circle"></i> <span>Horário de fim calculado automaticamente após selecionar o início</span>';
+      selectFim.innerHTML = '<option value="">Será preenchido automaticamente</option>';
+    }
+
+    /* ---------- VALOR TOTAL ---------- */
+    function calcularValorTotal() {
+      const display = document.getElementById('valorTotalDisplay');
+      const hidden  = document.getElementById('valorTotal');
+
+      if (!selectedPreco) {
+        display.textContent = 'Selecione um período';
+        display.classList.add('placeholder');
+        hidden.value = 'Selecione um período';
+        return;
+      }
+      const val = `R$ ${selectedPreco.valorBase.toFixed(2)}`;
+      display.textContent = val;
+      display.classList.remove('placeholder');
+      hidden.value = val;
+    }
+
+    /* ---------- HORÁRIO FIM AUTOMÁTICO ---------- */
+    function calcularHorarioFimAutomatico() {
+      const inicio = document.getElementById('horarioInicio').value;
+      if (!inicio || !selectedPreco) return;
+
+      const [horaInicio, minutoInicio] = inicio.split(':').map(Number);
+      let horaFim    = horaInicio + selectedPreco.duracao;
+      let minutoFim  = minutoInicio;
+
+      if (horaFim > 20) {
+        alert('Este horário ultrapassa o limite de funcionamento (20:00). Escolha um horário mais cedo.');
+        document.getElementById('horarioInicio').value = '';
+        return;
+      }
+
+      const horarioFimStr = `${String(horaFim).padStart(2,'0')}:${String(minutoFim).padStart(2,'0')}`;
+
+      if (!horariosDisponiveis.includes(horarioFimStr)) {
+        alert(`O horário de fim (${horarioFimStr}) não está disponível. Escolha outro horário de início.`);
+        document.getElementById('horarioInicio').value = '';
+        return;
+      }
+
+      const selectFim = document.getElementById('horarioFim');
+      selectFim.innerHTML = `<option value="${horarioFimStr}">${horarioFimStr}</option>`;
+      selectFim.disabled  = false;
+      selectFim.value     = horarioFimStr;
+      document.getElementById('infoHorarioFim').innerHTML =
+        `<i class="fas fa-check-circle" style="color:#2e7d52;"></i> <span>Horário de fim: +${selectedPreco.duracao}h a partir do início</span>`;
+
+      calcularValorTotal();
+    }
+
+    /* ---------- HORÁRIOS DISPONÍVEIS — GET /horarios-disponiveis-espaco ---------- */
+    async function carregarHorariosDisponiveis() {
+      const data = document.getElementById('dataReserva').value;
+      if (!data) return;
+
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      const mes  = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia  = String(hoje.getDate()).padStart(2, '0');
+      const dataHoje = `${ano}-${mes}-${dia}`;
+
+      if (data < dataHoje) {
+        alert('Não é possível reservar em datas passadas. Selecione uma data futura.');
+        document.getElementById('dataReserva').value = '';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/horarios-disponiveis-espaco?data=${data}`);
+        const ocupados  = await response.json();
+        const todosHorarios = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+
+        let horarios = todosHorarios.filter(h => !ocupados.includes(h));
+        const isHoje = (data === dataHoje);
+        if (isHoje) horarios = horarios.filter(h => !isHorarioPassado(h));
+
+        horariosDisponiveis = horarios;
+        const selectInicio  = document.getElementById('horarioInicio');
+
+        if (horariosDisponiveis.length > 0) {
+          selectInicio.innerHTML =
+            '<option value="">Selecione...</option>' +
+            horariosDisponiveis.map(h => `<option value="${h}">${h}</option>`).join('');
+        } else {
+          selectInicio.innerHTML = isHoje
+            ? '<option value="">Sem horários disponíveis para hoje</option>'
+            : '<option value="">Sem horários disponíveis nesta data</option>';
+        }
+
+        document.getElementById('horarioFim').innerHTML = '<option value="">Será preenchido automaticamente</option>';
+        document.getElementById('horarioFim').disabled  = true;
+
+      } catch (error) { console.error('Erro ao carregar horários:', error); }
+    }
+
+    /* ---------- EVENTOS ---------- */
+    document.getElementById('horarioInicio').addEventListener('change', function() {
+      if (this.value && selectedPreco) calcularHorarioFimAutomatico();
+    });
+
+    document.getElementById('dataReserva').addEventListener('change', carregarHorariosDisponiveis);
+
+    /* ---------- SUBMIT — POST /reservar-espaco ---------- */
+    document.getElementById('btnReservar').addEventListener('click', async () => {
+      const nome          = document.getElementById('nome').value;
+      const whatsapp      = document.getElementById('whatsapp').value;
+      const email         = document.getElementById('email').value;
+      const instagram     = document.getElementById('instagram').value;
+      const especialidade = document.getElementById('especialidade').value;
+      const dataReserva   = document.getElementById('dataReserva').value;
+      const horarioInicio = document.getElementById('horarioInicio').value;
+      const horarioFim    = document.getElementById('horarioFim').value;
+      const observacao    = document.getElementById('observacao').value;
+
+      if (!nome || !whatsapp || !dataReserva || !horarioInicio || !horarioFim || !selectedPreco) {
+        showAlert('⚠️ Preencha todos os campos obrigatórios.', 'error');
+        return;
+      }
+
+      const hoje = new Date();
+      const ano  = hoje.getFullYear();
+      const mes  = String(hoje.getMonth() + 1).padStart(2, '0');
+      const dia  = String(hoje.getDate()).padStart(2, '0');
+      const dataHoje = `${ano}-${mes}-${dia}`;
+
+      if (dataReserva < dataHoje) {
+        showAlert('⚠️ Não é possível reservar em datas passadas.', 'error');
+        return;
+      }
+      if (dataReserva === dataHoje && isHorarioPassado(horarioInicio)) {
+        showAlert('⚠️ Não é possível reservar um horário que já passou.', 'error');
+        return;
+      }
+
+      const reserva = {
+        nome, whatsapp, email, instagram, especialidade,
+        dataReserva, horarioInicio, horarioFim,
+        valor: selectedPreco.valorBase,
+        observacao,
+        tipo: selectedPreco.tipo
+      };
+
+      const btn = document.getElementById('btnReservar');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando…';
+
+      try {
+        const response = await fetch(`${API_URL}/reservar-espaco`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(reserva)
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          showAlert('✅ Solicitação enviada com sucesso! Entraremos em contato em breve.', 'success');
+          setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+        } else {
+          showAlert('❌ Erro: ' + (result.error || 'Tente novamente.'), 'error');
+        }
+      } catch (error) {
+        showAlert('❌ Erro ao conectar com o servidor.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-calendar-check"></i> Solicitar Reserva';
+      }
+    });
+
+    /* ---------- ALERT HELPER ---------- */
+    function showAlert(msg, type) {
+      const div = document.getElementById('alertMessage');
+      div.innerHTML = `<div class="alert-${type}">${msg}</div>`;
+      div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { div.innerHTML = ''; }, 5000);
+    }
+
+    /* ---------- INIT ---------- */
+    configurarDataMinima();
+    carregarPrecos();
+    calcularValorTotal();
+  </script>
+</body>
+</html>
