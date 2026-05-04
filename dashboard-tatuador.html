@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Casa Nanquim</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; }
+
+        .navbar { background: #000; padding: 1rem 2rem; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: white; }
+        .logo span { color: #ff8800; }
+        .user-info { display: flex; align-items: center; gap: 20px; }
+        .user-name { color: #ff8800; font-weight: 500; }
+        .btn-sair { background: #ff4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-sair:hover { background: #cc0000; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .card { background: #111; border-radius: 16px; padding: 24px; margin-bottom: 30px; border: 1px solid #222; }
+        .card h2 { margin-bottom: 20px; border-left: 4px solid #ff8800; padding-left: 15px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+        .stat-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 700; color: #ff8800; }
+        .stat-label { color: #888; font-size: 0.85rem; margin-top: 4px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #222; vertical-align: middle; }
+        th { background: #1a1a1a; color: #ff8800; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        tr:hover td { background: #161616; }
+
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .badge-pendente   { background: #ff8800; color: #000; }
+        .badge-confirmado { background: #00c851; color: #fff; }
+        .badge-cancelado  { background: #ff4444; color: #fff; }
+        .badge-concluido  { background: #33b5e5; color: #fff; }
+
+        .btn-reservar { background: #ff8800; color: black; border: none; padding: 11px 22px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+        .btn-reservar:hover { background: #ffaa33; }
+        .btn-acao { border: none; padding: 6px 13px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px; white-space: nowrap; }
+        .btn-alterar  { background: #1a6fcf; color: white; }
+        .btn-alterar:hover { background: #1558a8; }
+        .btn-alterar:disabled  { background: #333; color: #666; cursor: not-allowed; }
+        .btn-cancelar-res  { background: #ff4444; color: white; }
+        .btn-cancelar-res:hover { background: #cc0000; }
+        .btn-cancelar-res:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        .aviso-erro { background: #3b1f1f; border: 1px solid #ff4444; color: #ff8888; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: none; }
+
+        /* ---- MODAIS ---- */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.ativo { display: flex; }
+        .modal { background: #111; border: 1px solid #333; border-radius: 20px; padding: 36px; max-width: 500px; width: 100%; text-align: center; animation: popIn 0.22s ease; }
+        @keyframes popIn { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icone { font-size: 3rem; margin-bottom: 12px; }
+        .modal h3 { font-size: 1.3rem; margin-bottom: 10px; }
+        .modal p { color: #bbb; line-height: 1.6; margin-bottom: 8px; font-size: 0.95rem; }
+        .modal-aviso { background: #2a1f00; border: 1px solid #ff8800; color: #ffb347; padding: 12px 16px; border-radius: 10px; font-size: 0.88rem; margin: 14px 0; text-align: left; line-height: 1.5; }
+        .modal-aviso i { margin-right: 6px; }
+        .modal-botoes { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .btn-modal-ok     { background: #ff8800; color: black; border: none; padding: 11px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-modal-ok:hover { background: #ffaa33; }
+        .btn-modal-cancel { background: #333; color: white; border: none; padding: 11px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-modal-cancel:hover { background: #444; }
+        .btn-modal-danger { background: #ff4444; color: white; border: none; padding: 11px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-modal-danger:hover { background: #cc0000; }
+        .btn-modal-azul   { background: #1a6fcf; color: white; border: none; padding: 11px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-modal-azul:hover { background: #1558a8; }
+        .btn-modal-azul:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* campos dentro do modal de alteração */
+        .modal-form-group { margin: 16px 0; text-align: left; }
+        .modal-form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.9rem; color: #ccc; }
+        .modal-form-group input,
+        .modal-form-group select { width: 100%; padding: 10px 14px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; font-size: 0.95rem; font-family: 'Inter', sans-serif; }
+        .modal-form-group input:focus,
+        .modal-form-group select:focus { outline: none; border-color: #1a6fcf; }
+        .info-text { font-size: 12px; color: #888; margin-top: 4px; }
+
+
+        /* BANNER DE PAGAMENTO */
+        .banner-pagamento {
+            background: linear-gradient(135deg, #1a1200 0%, #2a1f00 100%);
+            border: 1px solid #ff8800;
+            border-radius: 14px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .banner-pagamento .icone { font-size: 1.6rem; flex-shrink: 0; }
+        .banner-pagamento .texto { flex: 1; min-width: 200px; }
+        .banner-pagamento .texto strong { color: #ff8800; font-size: 0.95rem; display: block; margin-bottom: 3px; }
+        .banner-pagamento .texto span { color: #ccc; font-size: 0.88rem; }
+        .banner-metodos { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .metodo-tag { background: #111; border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .metodo-tag.pix     { border: 1px solid #00c851; color: #00c851; }
+        .metodo-tag.debito  { border: 1px solid #33b5e5; color: #33b5e5; }
+        .metodo-tag.credito { border: 1px solid #bb86fc; color: #bb86fc; }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; }
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+            .btn-acao { padding: 5px 8px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="#" class="logo">⚡ CASA <span>NANQUIM</span></a>
+    <div class="user-info">
+        <span class="user-name" id="userName"></span>
+        <button class="btn-sair" onclick="logout()">Sair</button>
+    </div>
+</nav>
+
+<!-- ===== MODAL: RESERVA FEITA COM SUCESSO ===== -->
+<div class="modal-overlay" id="modalSucesso">
+    <div class="modal">
+        <div class="modal-icone">🎉</div>
+        <h3>Reserva solicitada com sucesso!</h3>
+        <p>Sua solicitação foi enviada e está aguardando confirmação do estúdio.</p>
+        <div class="modal-aviso">
+            <i class="fas fa-money-bill-wave"></i>
+            <strong>Pagamento presencial:</strong> o pagamento deve ser realizado <strong>no dia da sua reserva</strong>, diretamente no estúdio Casa Nanquim. Não é necessário pagar nenhum valor antecipadamente.
+        </div>
+        <div class="modal-botoes">
+            <button class="btn-modal-ok" onclick="fecharModal('modalSucesso')">Entendido ✓</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: CANCELAR RESERVA ===== -->
+<div class="modal-overlay" id="modalCancelar">
+    <div class="modal">
+        <div class="modal-icone">⚠️</div>
+        <h3>Cancelar reserva</h3>
+        <p>Você tem certeza que deseja cancelar esta reserva?</p>
+        <div class="modal-aviso">
+            <i class="fas fa-clock"></i>
+            <strong>Atenção:</strong> cancelamentos devem ser feitos com no mínimo <strong>48 horas de antecedência</strong> em relação à data reservada. Cancelamentos fora deste prazo será cobrado 75% do valor da reserva.
+        </div>
+        <div class="modal-botoes">
+            <button class="btn-modal-cancel" onclick="fecharModal('modalCancelar')">Voltar</button>
+            <button class="btn-modal-danger" id="btnConfirmarCancelamento">Confirmar cancelamento</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL: ALTERAR DATA DA RESERVA ===== -->
+<div class="modal-overlay" id="modalAlterar">
+    <div class="modal">
+        <div class="modal-icone">📅</div>
+        <h3>Alterar data da reserva</h3>
+        <p>Escolha a nova data e horário para a sua reserva.</p>
+
+        <div class="modal-aviso">
+            <i class="fas fa-clock"></i>
+            <strong>Lembrete:</strong> alterações de data devem ser solicitadas com no mínimo <strong>48 horas de antecedência</strong> em relação à data original da reserva.
+        </div>
+
+        <div class="modal-form-group">
+            <label>📅 Nova data</label>
+            <input type="date" id="novaData" min="">
+        </div>
+        <div class="modal-form-group">
+            <label>⏰ Novo horário de início</label>
+            <select id="novoHorario">
+                <option value="">Selecione uma data primeiro</option>
+            </select>
+        </div>
+        <div class="modal-form-group">
+            <label>⏰ Horário de fim</label>
+            <input type="text" id="novoHorarioFim" readonly placeholder="Calculado automaticamente">
+            <p class="info-text" id="infoNovoFim"></p>
+        </div>
+
+        <div class="modal-botoes">
+            <button class="btn-modal-cancel" onclick="fecharModal('modalAlterar')">Cancelar</button>
+            <button class="btn-modal-azul" id="btnConfirmarAlteracao">Confirmar alteração</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== CONTEÚDO ===== -->
+<div class="container">
+    <div id="avisoErro" class="aviso-erro"></div>
+        <!-- AVISO FIXO DE PAGAMENTO -->
+        <div class="banner-pagamento">
+            <div class="icone">💳</div>
+            <div class="texto">
+                <strong>Pagamento realizado presencialmente no dia da reserva</strong>
+                <span>Não é necessário pagar antecipadamente. Aceitamos:</span>
+            </div>
+            <div class="banner-metodos">
+                <span class="metodo-tag pix"><i class="fas fa-qrcode"></i> Pix</span>
+                <span class="metodo-tag debito"><i class="fas fa-credit-card"></i> Débito</span>
+                <span class="metodo-tag credito"><i class="fas fa-credit-card"></i> Crédito</span>
+            </div>
+        </div>
+
+
+    <div class="card">
+        <h2>📊 Minhas Estatísticas</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalSolicitacoes">-</div>
+                <div class="stat-label">Total de Solicitações</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="solicitacoesPendentes">-</div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="solicitacoesAprovadas">-</div>
+                <div class="stat-label">Aprovadas</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+            <h2 style="margin-bottom:0;">📋 Minhas Solicitações</h2>
+            <button class="btn-reservar" onclick="window.location.href='solicitar-reserva.html'">+ Nova Reserva</button>
+        </div>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Data</th><th>Início</th><th>Fim</th>
+                        <th>Período</th><th>Valor</th><th>Status</th><th>Observação</th><th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="solicitacoesBody">
+                    <tr><td colspan="9" style="text-align:center; color:#888;">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var host = window.location.hostname;
+    var API_URL = (host === '' || host === 'localhost' || host === '127.0.0.1')
+        ? 'http://localhost:8888/CasaNanquim/api'
+        : 'http://' + host + ':8888/CasaNanquim/api';
+
+    // ===== LOGIN =====
+    function verificarLogin() {
+        var id   = localStorage.getItem('tatuadorId');
+        var nome = localStorage.getItem('tatuadorNome');
+        if (!id) { window.location.href = 'login-tatuador.html'; return false; }
+        document.getElementById('userName').innerHTML = '<i class="fas fa-user"></i> ' + nome;
+        return true;
+    }
+
+    // ===== MODAIS =====
+    function abrirModal(id)  { document.getElementById(id).classList.add('ativo'); }
+    function fecharModal(id) { document.getElementById(id).classList.remove('ativo'); }
+    document.querySelectorAll('.modal-overlay').forEach(function(el) {
+        el.addEventListener('click', function(e) { if (e.target === el) fecharModal(el.id); });
+    });
+
+    // Abre pop-up de sucesso se veio da página de reserva
+    (function() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.get('reserva') === 'sucesso') {
+            abrirModal('modalSucesso');
+            history.replaceState({}, '', window.location.pathname);
+        }
+    })();
+
+    // ===== CARREGAR SOLICITAÇÕES =====
+    function carregarSolicitacoes() {
+        fetch(API_URL + '/tatuador/solicitacoes', { credentials: 'include' })
+        .then(function(r) {
+            if (r.status === 401 || r.status === 403) {
+                localStorage.removeItem('tatuadorId');
+                localStorage.removeItem('tatuadorNome');
+                window.location.href = 'login-tatuador.html';
+                return null;
+            }
+            return r.json();
+        })
+        .then(function(lista) {
+            if (!lista) return;
+            renderSolicitacoes(lista);
+            renderStats(lista);
+        })
+        .catch(function(err) {
+            var av = document.getElementById('avisoErro');
+            av.style.display = 'block';
+            av.textContent = 'Erro ao carregar. Verifique se o Tomcat está rodando.';
+            document.getElementById('solicitacoesBody').innerHTML =
+                '<tr><td colspan="9" style="text-align:center;color:#888;">Falha ao conectar com o servidor.</td></tr>';
+            console.error(err);
+        });
+    }
+
+    function diffHorasAteData(dataStr) {
+        if (!dataStr) return -1;
+        var p = dataStr.split('-');
+        var dataReserva = new Date(p[0], p[1]-1, p[2]);
+        dataReserva.setHours(0,0,0,0);
+        var hoje = new Date(); hoje.setHours(0,0,0,0);
+        return (dataReserva - hoje) / (1000 * 60 * 60);
+    }
+
+    function renderSolicitacoes(lista) {
+        var tbody = document.getElementById('solicitacoesBody');
+        if (!lista || lista.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#888;">Nenhuma solicitação encontrada. Clique em "+ Nova Reserva"!</td></tr>';
+            return;
+        }
+        var badgeMap = { PENDENTE:'badge-pendente', CONFIRMADO:'badge-confirmado', CANCELADO:'badge-cancelado', CONCLUIDO:'badge-concluido' };
+
+        tbody.innerHTML = lista.map(function(s) {
+            var badgeClass = badgeMap[s.status] || 'badge-pendente';
+            var horas = diffHorasAteData(s.dataSolicitacao);
+            var ativa = s.status !== 'CANCELADO' && s.status !== 'CONCLUIDO';
+            var dentro48 = horas < 48;
+
+            var btnAlterar = '';
+            var btnCancelar = '';
+
+            if (ativa) {
+                // Botão alterar
+                if (!dentro48) {
+                    btnAlterar = '<button class="btn-acao btn-alterar" onclick="abrirModalAlterar(' + s.id + ',\'' + s.dataSolicitacao + '\',\'' + s.horarioInicio + '\',\'' + s.periodoEscolhido + '\')">' +
+                        '<i class="fas fa-calendar-alt"></i> Alterar data</button>';
+                } else {
+                    btnAlterar = '<button class="btn-acao btn-alterar" disabled title="Alteração deve ser feita com 48h de antecedência">' +
+                        '<i class="fas fa-calendar-alt"></i> Alterar data</button>';
+                }
+                // Botão cancelar
+                if (!dentro48) {
+                    btnCancelar = '<button class="btn-acao btn-cancelar-res" onclick="confirmarCancelamento(' + s.id + ')">' +
+                        '<i class="fas fa-times"></i> Cancelar</button>';
+                } else {
+                    btnCancelar = '<button class="btn-acao btn-cancelar-res" disabled title="Cancelamento deve ser feito com 48h de antecedência">' +
+                        '<i class="fas fa-times"></i> Cancelar</button>';
+                }
+            }
+
+            var acoes = (btnAlterar || btnCancelar)
+                ? ('<div style="display:flex;gap:4px;flex-wrap:wrap;">' + btnAlterar + btnCancelar + '</div>')
+                : '<span style="color:#555;font-size:12px;">—</span>';
+
+            return '<tr>' +
+                '<td>' + s.id + '</td>' +
+                '<td>' + (s.dataSolicitacao || '-') + '</td>' +
+                '<td>' + (s.horarioInicio || '-') + '</td>' +
+                '<td>' + (s.horarioFim || '-') + '</td>' +
+                '<td>' + (s.periodoEscolhido || '-') + '</td>' +
+                '<td>R$ ' + (s.valor || 0).toFixed(2) + '</td>' +
+                '<td><span class="badge ' + badgeClass + '">' + (s.status || 'PENDENTE') + '</span></td>' +
+                '<td>' + (s.observacao ? s.observacao.substring(0,25) + '...' : '-') + '</td>' +
+                '<td>' + acoes + '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function renderStats(lista) {
+        document.getElementById('totalSolicitacoes').textContent = lista.length;
+        document.getElementById('solicitacoesPendentes').textContent = lista.filter(function(s){ return s.status==='PENDENTE'; }).length;
+        document.getElementById('solicitacoesAprovadas').textContent = lista.filter(function(s){ return s.status==='CONFIRMADO'||s.status==='CONCLUIDO'; }).length;
+    }
+
+    // ===== CANCELAR =====
+    var idParaCancelar = null;
+    function confirmarCancelamento(id) { idParaCancelar = id; abrirModal('modalCancelar'); }
+    document.getElementById('btnConfirmarCancelamento').addEventListener('click', function() {
+        if (!idParaCancelar) return;
+        var btn = this; btn.disabled = true; btn.textContent = 'Cancelando...';
+        fetch(API_URL + '/tatuador/cancelar/' + idParaCancelar, {
+            method: 'PUT', headers: {'Content-Type':'application/json'},
+            credentials: 'include', body: JSON.stringify({status:'CANCELADO'})
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            fecharModal('modalCancelar');
+            if (res.success) carregarSolicitacoes();
+            else alert('Erro ao cancelar: ' + (res.error || 'tente novamente.'));
+        })
+        .catch(function(){ fecharModal('modalCancelar'); alert('Erro ao conectar com o servidor.'); })
+        .finally(function(){ btn.disabled=false; btn.textContent='Confirmar cancelamento'; idParaCancelar=null; });
+    });
+
+    // ===== ALTERAR DATA =====
+    var reservaParaAlterar = null; // { id, periodoEscolhido }
+
+    function abrirModalAlterar(id, dataAtual, horarioAtual, periodo) {
+        reservaParaAlterar = { id: id, periodo: periodo };
+
+        // Define data mínima = amanhã
+        var amanha = new Date(); amanha.setDate(amanha.getDate() + 1);
+        var minData = amanha.getFullYear() + '-' +
+            String(amanha.getMonth()+1).padStart(2,'0') + '-' +
+            String(amanha.getDate()).padStart(2,'0');
+        var novaDataInput = document.getElementById('novaData');
+        novaDataInput.min = minData;
+        novaDataInput.value = '';
+        document.getElementById('novoHorario').innerHTML = '<option value="">Selecione uma data primeiro</option>';
+        document.getElementById('novoHorarioFim').value = '';
+        document.getElementById('infoNovoFim').textContent = '';
+
+        abrirModal('modalAlterar');
+    }
+
+    // Ao trocar a data no modal de alteração, carrega horários disponíveis
+    document.getElementById('novaData').addEventListener('change', function() {
+        var data = this.value;
+        if (!data) return;
+        fetch(API_URL + '/horarios-disponiveis-espaco?data=' + data)
+        .then(function(r){ return r.json(); })
+        .then(function(ocupados){
+            var todos = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+            var livres = todos.filter(function(h){ return !ocupados.includes(h); });
+            var sel = document.getElementById('novoHorario');
+            if (livres.length > 0) {
+                sel.innerHTML = '<option value="">Selecione...</option>' +
+                    livres.map(function(h){ return '<option value="'+h+'">'+h+'</option>'; }).join('');
+            } else {
+                sel.innerHTML = '<option value="">Sem horários disponíveis nesta data</option>';
+            }
+            document.getElementById('novoHorarioFim').value = '';
+            document.getElementById('infoNovoFim').textContent = '';
+        })
+        .catch(function(e){ console.error(e); });
+    });
+
+    // Ao trocar horário, calcula fim automaticamente
+    document.getElementById('novoHorario').addEventListener('change', function() {
+        var inicio = this.value;
+        if (!inicio || !reservaParaAlterar) return;
+        var duracao = 0;
+        if (reservaParaAlterar.periodo === '2_HORAS') duracao = 2;
+        else if (reservaParaAlterar.periodo === 'MEIO_PERIODO') duracao = 4;
+        else if (reservaParaAlterar.periodo === 'DIA_INTEIRO') duracao = 8;
+        if (!duracao) return;
+        var h = parseInt(inicio.split(':')[0]);
+        var m = inicio.split(':')[1];
+        var fimH = h + duracao;
+        if (fimH > 20) {
+            alert('Este horário ultrapassa o limite de funcionamento (20:00). Escolha outro.');
+            this.value = '';
+            document.getElementById('novoHorarioFim').value = '';
+            return;
+        }
+        var fim = String(fimH).padStart(2,'0') + ':' + m;
+        document.getElementById('novoHorarioFim').value = fim;
+        document.getElementById('infoNovoFim').textContent = 'Calculado automaticamente (+' + duracao + 'h)';
+    });
+
+    document.getElementById('btnConfirmarAlteracao').addEventListener('click', function() {
+        var novaData   = document.getElementById('novaData').value;
+        var novoInicio = document.getElementById('novoHorario').value;
+        var novoFim    = document.getElementById('novoHorarioFim').value;
+
+        if (!novaData || !novoInicio || !novoFim) {
+            alert('Selecione a nova data e o horário de início.');
+            return;
+        }
+
+        var btn = this; btn.disabled = true; btn.textContent = 'Salvando...';
+
+        fetch(API_URL + '/tatuador/alterar-data/' + reservaParaAlterar.id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                dataSolicitacao: novaData,
+                horarioInicio: novoInicio,
+                horarioFim: novoFim
+            })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            fecharModal('modalAlterar');
+            if (res.success) {
+                carregarSolicitacoes();
+            } else {
+                alert('Erro ao alterar: ' + (res.error || 'tente novamente.'));
+            }
+        })
+        .catch(function(){ fecharModal('modalAlterar'); alert('Erro ao conectar com o servidor.'); })
+        .finally(function(){ btn.disabled=false; btn.textContent='Confirmar alteração'; reservaParaAlterar=null; });
+    });
+
+    // ===== LOGOUT =====
+    function logout() {
+        fetch(API_URL + '/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+        localStorage.removeItem('tatuadorId');
+        localStorage.removeItem('tatuadorNome');
+        window.location.href = 'index.html';
+    }
+
+    if (verificarLogin()) carregarSolicitacoes();
+</script>
+</body>
+</html>
