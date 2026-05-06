@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Casa Nanquim</title>
+
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* ============================================================
+       CASA NANQUIM — DASHBOARD TATUADOR
+       Mesmo sistema visual do painel admin
+    ============================================================ */
+    :root {
+      --paper:        #f7f5f1;
+      --paper-warm:   #f0ede7;
+      --ink:          #141414;
+      --ink-mid:      #2a2a2a;
+      --ink-light:    #5a5a5a;
+      --ink-border:   rgba(20,20,20,0.10);
+      --ink-border-h: rgba(20,20,20,0.22);
+      --accent:       #8b7355;
+      --green:        #2a6e46;
+      --green-bg:     rgba(42,110,70,0.10);
+      --orange:       #b5631a;
+      --orange-bg:    rgba(181,99,26,0.10);
+      --red:          #b03030;
+      --red-bg:       rgba(176,48,48,0.10);
+      --blue:         #2a6b9c;
+      --blue-bg:      rgba(42,107,156,0.10);
+      --sidebar-w:    272px;
+      --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+      --ease-inout:   cubic-bezier(0.4,0,0.2,1);
+      --shadow-soft:  0 4px 24px rgba(20,20,20,0.06);
+      --shadow-hover: 0 16px 48px rgba(20,20,20,0.12);
+      --font-d: 'Cormorant Garamond', serif;
+      --font-b: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-b);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    .bg-texture {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Ink blobs ── */
+    .ink-blobs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ink-blob {
+      position: absolute; border-radius: 60% 40% 55% 45% / 48% 52% 48% 52%;
+      filter: blur(55px);
+      animation: blobDrift var(--dur, 32s) ease-in-out infinite;
+    }
+    .ink-blob:nth-child(1) {
+      width: 480px; height: 480px; top: -140px; left: -140px;
+      background: radial-gradient(ellipse, rgba(20,20,20,0.055), transparent 70%);
+      --dur: 38s;
+    }
+    .ink-blob:nth-child(2) {
+      width: 560px; height: 560px; bottom: -180px; right: -160px;
+      background: radial-gradient(ellipse, rgba(20,20,20,0.04), transparent 70%);
+      --dur: 44s; animation-delay: -16s;
+    }
+    @keyframes blobDrift {
+      0%,100% { transform: translate3d(0,0,0);        border-radius: 60% 40% 55% 45%/48% 52% 48% 52%; }
+      33%      { transform: translate3d(20px,-16px,0); border-radius: 45% 55% 48% 52%/52% 48% 55% 45%; }
+      66%      { transform: translate3d(-14px,18px,0); border-radius: 55% 45% 52% 48%/45% 55% 48% 52%; }
+    }
+
+    /* ============================================================
+       SIDEBAR
+    ============================================================ */
+    .admin-sidebar {
+      position: fixed; left: 0; top: 0;
+      width: var(--sidebar-w); height: 100vh;
+      background: var(--ink);
+      color: rgba(247,245,241,0.6);
+      padding: 28px 20px;
+      display: flex; flex-direction: column;
+      z-index: 100; overflow-y: auto;
+      border-right: 1px solid rgba(247,245,241,0.04);
+    }
+
+    .sidebar-brand {
+      text-align: center; margin-bottom: 4px;
+    }
+    .sidebar-brand img {
+      max-height: 48px;
+      filter: brightness(0) invert(1);
+      opacity: 0.85; display: block;
+      margin: 0 auto 10px;
+    }
+    .sidebar-brand h3 {
+      font-family: var(--font-d); font-size: 1.25rem; font-weight: 500;
+      color: rgba(247,245,241,0.9);
+    }
+    .sidebar-brand p {
+      font-size: 0.56rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(247,245,241,0.25);
+    }
+    .sidebar-divider {
+      border: none; border-top: 1px solid rgba(247,245,241,0.07);
+      margin: 20px 0;
+    }
+
+    /* User chip */
+    .sidebar-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px;
+      background: rgba(247,245,241,0.06);
+      border: 1px solid rgba(247,245,241,0.08);
+      margin-bottom: 20px;
+    }
+    .sidebar-user-avatar {
+      width: 34px; height: 34px;
+      background: rgba(247,245,241,0.1);
+      border: 1px solid rgba(247,245,241,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; color: rgba(247,245,241,0.6);
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { min-width: 0; }
+    .sidebar-user-label {
+      font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(247,245,241,0.25); display: block; margin-bottom: 1px;
+    }
+    .sidebar-user-name {
+      font-size: 0.82rem; color: rgba(247,245,241,0.85); font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      display: block;
+    }
+
+    .sidebar-nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; margin: 2px 0;
+      color: rgba(247,245,241,0.5); text-decoration: none;
+      font-size: 0.78rem; font-weight: 400;
+      border: 1px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      color: rgba(247,245,241,0.9);
+      background: rgba(247,245,241,0.06);
+      border-color: rgba(247,245,241,0.08);
+    }
+    .sidebar-nav a i { width: 16px; text-align: center; }
+
+    .sidebar-spacer { flex: 1; }
+
+    .sidebar-logout {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 12px; margin-top: 8px;
+      background: rgba(176,48,48,0.12);
+      border: 1px solid rgba(176,48,48,0.22);
+      color: rgba(255,160,160,0.75);
+      font-size: 0.78rem; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sidebar-logout:hover {
+      background: rgba(176,48,48,0.22);
+      color: rgba(255,160,160,1);
+    }
+
+    /* ============================================================
+       MAIN CONTENT
+    ============================================================ */
+    .admin-main {
+      margin-left: var(--sidebar-w);
+      padding: 36px 36px 60px;
+      position: relative; min-height: 100vh; z-index: 10;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--ink-border);
+    }
+    .page-header-tag {
+      font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .page-header-row {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .page-header h1 {
+      font-family: var(--font-d); font-size: 2.2rem; font-weight: 500;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Nova reserva button ── */
+    .btn-nova-reserva {
+      background: var(--ink); color: var(--paper);
+      border: none; padding: 11px 24px;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; cursor: pointer;
+      font-family: var(--font-b);
+      display: flex; align-items: center; gap: 8px;
+      transition: background 0.2s var(--ease-inout), transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+    }
+    .btn-nova-reserva:hover {
+      background: var(--ink-mid);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(20,20,20,0.2);
+    }
+
+    /* ── Aviso de erro ── */
+    .aviso-erro {
+      background: var(--red-bg);
+      border: 1px solid rgba(176,48,48,0.3);
+      color: var(--red); padding: 12px 18px;
+      margin-bottom: 24px; font-size: 0.85rem;
+      display: none;
+    }
+
+    /* ============================================================
+       BANNER PAGAMENTO
+    ============================================================ */
+    .banner-pagamento {
+      background: #fff;
+      border: 1px solid var(--ink-border);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    }
+    .banner-pagamento .bp-icon {
+      width: 44px; height: 44px;
+      background: rgba(20,20,20,0.05);
+      border: 1px solid var(--ink-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+      color: var(--accent);
+    }
+    .banner-pagamento .bp-text { flex: 1; min-width: 180px; }
+    .banner-pagamento .bp-title {
+      font-family: var(--font-d); font-size: 1.05rem; font-weight: 600;
+      color: var(--ink); display: block; margin-bottom: 2px;
+    }
+    .banner-pagamento .bp-sub {
+      font-size: 0.78rem; color: var(--ink-light);
+    }
+    .banner-metodos {
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    }
+    .metodo-tag {
+      padding: 6px 14px; font-size: 0.72rem; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      border: 1px solid var(--ink-border); background: var(--paper);
+      color: var(--ink-light); letter-spacing: 0.5px;
+    }
+    .metodo-tag.pix     { border-color: rgba(42,110,70,0.4);  color: var(--green); }
+    .metodo-tag.debito  { border-color: rgba(42,107,156,0.4); color: var(--blue);  }
+    .metodo-tag.credito { border-color: rgba(139,115,85,0.5); color: var(--accent);}
+
+    /* ============================================================
+       STATS
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--ink-border);
+      padding: 22px 24px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--card-accent, var(--accent));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+    .stat-card:hover::after { transform: scaleX(1); }
+    .stat-card i {
+      font-size: 1rem; color: var(--accent); margin-bottom: 12px;
+      display: block; opacity: 0.75;
+    }
+    .stat-card h3 {
+      font-family: var(--font-d); font-size: 2.4rem; font-weight: 600;
+      letter-spacing: -1px; line-height: 1; margin-bottom: 6px;
+    }
+    .stat-card p {
+      font-size: 0.68rem; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--ink-light);
+    }
+    .stat-card.s-pendente  { --card-accent: var(--orange); }
+    .stat-card.s-aprovado  { --card-accent: var(--green);  }
+
+    /* ============================================================
+       TABELA SECTION
+    ============================================================ */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .section-title {
+      font-family: var(--font-d); font-size: 1.5rem; font-weight: 500;
+      letter-spacing: -0.3px;
+    }
+    .section-title-tag {
+      font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); display: block; margin-bottom: 2px;
+    }
+
+    .table-wrapper {
+      background: #121212;
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow-x: auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+
+    .table-wrapper table {
+      width: 100%; border-collapse: collapse;
+      min-width: 860px;
+      color: #f0f0f0;
+      font-size: 0.88rem;
+    }
+
+    .table-wrapper thead tr { background: #1a1a1a; }
+
+    .table-wrapper th {
+      padding: 15px 16px;
+      text-align: left;
+      font-size: 0.68rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: #ccc;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: var(--font-b);
+      background: #1a1a1a;
+    }
+
+    .table-wrapper td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+      color: #e8e8e8;
+      background: transparent;
+    }
+
+    .table-wrapper tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.025); }
+    .table-wrapper tbody tr:hover td { background: rgba(255,255,255,0.075) !important; transition: background 0.18s; }
+
+    /* Status badges */
+    .badge {
+      display: inline-block; padding: 5px 13px;
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      border-radius: 30px; font-family: var(--font-b);
+      white-space: nowrap;
+    }
+    .badge-pendente   { background: rgba(181,99,26,0.22);  color: #e2a159; }
+    .badge-confirmado { background: rgba(42,110,70,0.22);  color: #5ebc88; }
+    .badge-cancelado  { background: rgba(176,48,48,0.22);  color: #e27a7a; }
+    .badge-concluido  { background: rgba(42,107,156,0.22); color: #7abde0; }
+
+    /* Botões de ação */
+    .btn-acao {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 12px; font-size: 0.7rem; font-weight: 500;
+      border: none; cursor: pointer; border-radius: 30px;
+      transition: opacity 0.2s, transform 0.2s;
+      font-family: var(--font-b); white-space: nowrap;
+    }
+    .btn-acao:hover:not(:disabled) { opacity: 0.82; transform: translateY(-1px); }
+    .btn-alterar       { background: rgba(42,107,156,0.3); color: #7abde0; }
+    .btn-cancelar-res  { background: rgba(176,48,48,0.3);  color: #e27a7a; }
+    .btn-acao:disabled { background: rgba(255,255,255,0.06); color: #555; cursor: not-allowed; }
+
+    /* Empty / loading rows */
+    .row-empty td {
+      text-align: center; padding: 48px; color: #666; font-size: 0.85rem;
+    }
+
+    /* ============================================================
+       MODAIS
+    ============================================================ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      z-index: 1000; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.ativo { display: flex; }
+
+    .modal {
+      background: #fff;
+      border: 1px solid var(--ink-border);
+      padding: 40px 36px;
+      max-width: 500px; width: 100%;
+      text-align: center;
+      box-shadow: 0 32px 80px rgba(20,20,20,0.25);
+      animation: modalIn 0.35s var(--ease-out-expo) both;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-icone {
+      font-size: 2.4rem; margin-bottom: 16px; line-height: 1;
+    }
+    .modal h3 {
+      font-family: var(--font-d); font-size: 1.7rem; font-weight: 500;
+      letter-spacing: -0.3px; margin-bottom: 10px; color: var(--ink);
+    }
+    .modal p {
+      color: var(--ink-light); line-height: 1.65; margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .modal-aviso {
+      background: var(--orange-bg);
+      border: 1px solid rgba(181,99,26,0.25);
+      color: var(--orange); padding: 14px 16px;
+      font-size: 0.84rem; margin: 18px 0;
+      text-align: left; line-height: 1.55;
+    }
+    .modal-aviso i { margin-right: 6px; }
+
+    .modal-divider {
+      border: none; border-top: 1px solid var(--ink-border);
+      margin: 24px 0 20px;
+    }
+
+    .modal-botoes {
+      display: flex; gap: 10px; justify-content: center;
+      margin-top: 22px; flex-wrap: wrap;
+    }
+
+    .btn-modal-ok {
+      background: var(--ink); color: var(--paper);
+      border: none; padding: 12px 28px;
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 1.5px;
+      text-transform: uppercase; cursor: pointer;
+      font-family: var(--font-b);
+      transition: background 0.2s;
+    }
+    .btn-modal-ok:hover { background: var(--ink-mid); }
+
+    .btn-modal-cancel {
+      background: var(--paper-warm);
+      border: 1px solid var(--ink-border);
+      color: var(--ink-light); padding: 12px 28px;
+      font-size: 0.72rem; cursor: pointer;
+      font-family: var(--font-b);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-modal-cancel:hover { border-color: var(--ink-border-h); color: var(--ink); }
+
+    .btn-modal-danger {
+      background: var(--red); color: #fff;
+      border: none; padding: 12px 28px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 1px;
+      cursor: pointer; font-family: var(--font-b);
+      transition: background 0.2s;
+    }
+    .btn-modal-danger:hover { background: #962020; }
+
+    .btn-modal-azul {
+      background: var(--blue); color: #fff;
+      border: none; padding: 12px 28px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 1px;
+      cursor: pointer; font-family: var(--font-b);
+      transition: background 0.2s;
+    }
+    .btn-modal-azul:hover { background: #215d8a; }
+    .btn-modal-azul:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Modal form */
+    .modal-form-group { margin: 14px 0; text-align: left; }
+    .modal-form-group label {
+      display: block; margin-bottom: 6px;
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--ink-light);
+    }
+    .modal-form-group input,
+    .modal-form-group select {
+      width: 100%; padding: 11px 14px;
+      background: var(--paper);
+      border: 1px solid var(--ink-border);
+      color: var(--ink); font-size: 0.88rem;
+      font-family: var(--font-b);
+      transition: border-color 0.2s;
+    }
+    .modal-form-group input:focus,
+    .modal-form-group select:focus {
+      outline: none; border-color: var(--accent);
+      background: #fff;
+    }
+    .info-text { font-size: 0.7rem; color: var(--accent); margin-top: 5px; }
+
+    /* ============================================================
+       RESPONSIVO
+    ============================================================ */
+    @media (max-width: 860px) {
+      .admin-sidebar {
+        width: 100%; height: auto; position: relative;
+        flex-direction: row; flex-wrap: wrap; padding: 14px 16px;
+        gap: 12px;
+      }
+      .admin-main { margin-left: 0; padding: 20px 16px 48px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .page-header-row { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 16px; }
+      .stat-card h3 { font-size: 1.9rem; }
+      .modal { padding: 28px 20px; }
+    }
+
+    ::selection { background: rgba(20,20,20,0.12); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(20,20,20,0.05); }
+    ::-webkit-scrollbar-thumb { background: rgba(20,20,20,0.2); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="bg-texture"></div>
+<div class="ink-blobs"><div class="ink-blob"></div><div class="ink-blob"></div></div>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<aside class="admin-sidebar">
+  <div class="sidebar-brand">
+    <img src="img/logooficial.png" alt="Casa Nanquim" onerror="this.style.display='none'">
+    <h3>Casa Nanquim</h3>
+    <p>Área do Tatuador</p>
+  </div>
+  <hr class="sidebar-divider">
+
+  <!-- User chip (populado pelo JS) -->
+  <div class="sidebar-user">
+    <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+    <div class="sidebar-user-info">
+      <span class="sidebar-user-label">Logado como</span>
+      <span class="sidebar-user-name" id="userName">—</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="active"><i class="fas fa-calendar-check"></i> Minhas Reservas</a>
+    <a href="solicitar-reserva.html"><i class="fas fa-plus-circle"></i> Nova Reserva</a>
+    <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Site</a>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+  <button class="sidebar-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+</aside>
+
+<!-- ============================================================
+     MODAIS
+============================================================ -->
+
+<!-- Sucesso -->
+<div class="modal-overlay" id="modalSucesso">
+  <div class="modal">
+    <div class="modal-icone">🎉</div>
+    <h3>Reserva solicitada!</h3>
+    <p>Sua solicitação foi enviada e está aguardando confirmação do estúdio.</p>
+    <div class="modal-aviso">
+      <i class="fas fa-money-bill-wave"></i>
+      <strong>Pagamento presencial:</strong> o pagamento deve ser realizado <strong>no dia da sua reserva</strong>, diretamente no estúdio Casa Nanquim. Não é necessário pagar nenhum valor antecipadamente.
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-ok" onclick="fecharModal('modalSucesso')">Entendido ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cancelar -->
+<div class="modal-overlay" id="modalCancelar">
+  <div class="modal">
+    <div class="modal-icone">⚠️</div>
+    <h3>Cancelar reserva</h3>
+    <p>Você tem certeza que deseja cancelar esta reserva?</p>
+    <div class="modal-aviso">
+      <i class="fas fa-clock"></i>
+      <strong>Atenção:</strong> cancelamentos devem ser feitos com no mínimo <strong>48 horas de antecedência</strong> em relação à data reservada. Cancelamentos fora deste prazo serão cobrados 75% do valor da reserva.
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-cancel" onclick="fecharModal('modalCancelar')">Voltar</button>
+      <button class="btn-modal-danger" id="btnConfirmarCancelamento">Confirmar cancelamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Alterar data -->
+<div class="modal-overlay" id="modalAlterar">
+  <div class="modal">
+    <div class="modal-icone">📅</div>
+    <h3>Alterar data da reserva</h3>
+    <p>Escolha a nova data e horário para a sua reserva.</p>
+    <div class="modal-aviso">
+      <i class="fas fa-clock"></i>
+      <strong>Lembrete:</strong> alterações devem ser solicitadas com no mínimo <strong>48 horas de antecedência</strong> em relação à data original da reserva.
+    </div>
+    <hr class="modal-divider">
+    <div class="modal-form-group">
+      <label><i class="fas fa-calendar-alt" style="margin-right:5px;color:var(--accent);"></i>Nova data</label>
+      <input type="date" id="novaData" min="">
+    </div>
+    <div class="modal-form-group">
+      <label><i class="fas fa-clock" style="margin-right:5px;color:var(--accent);"></i>Novo horário de início</label>
+      <select id="novoHorario">
+        <option value="">Selecione uma data primeiro</option>
+      </select>
+    </div>
+    <div class="modal-form-group">
+      <label><i class="fas fa-hourglass-end" style="margin-right:5px;color:var(--accent);"></i>Horário de fim</label>
+      <input type="text" id="novoHorarioFim" readonly placeholder="Calculado automaticamente">
+      <p class="info-text" id="infoNovoFim"></p>
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-cancel" onclick="fecharModal('modalAlterar')">Cancelar</button>
+      <button class="btn-modal-azul" id="btnConfirmarAlteracao">Confirmar alteração</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="admin-main">
+
+  <div class="page-header">
+    <div class="page-header-tag">✦ ÁREA DO TATUADOR ✦</div>
+    <div class="page-header-row">
+      <h1>Minhas <em>Reservas</em></h1>
+      <button class="btn-nova-reserva" onclick="window.location.href='solicitar-reserva.html'">
+        <i class="fas fa-plus"></i> Nova Reserva
+      </button>
+    </div>
+  </div>
+
+  <!-- Erro -->
+  <div id="avisoErro" class="aviso-erro"></div>
+
+  <!-- Banner pagamento -->
+  <div class="banner-pagamento">
+    <div class="bp-icon"><i class="fas fa-credit-card"></i></div>
+    <div class="bp-text">
+      <span class="bp-title">Pagamento realizado presencialmente no dia da reserva</span>
+      <span class="bp-sub">Não é necessário pagar antecipadamente. Aceitamos:</span>
+    </div>
+    <div class="banner-metodos">
+      <span class="metodo-tag pix"><i class="fas fa-qrcode"></i> Pix</span>
+      <span class="metodo-tag debito"><i class="fas fa-credit-card"></i> Débito</span>
+      <span class="metodo-tag credito"><i class="fas fa-credit-card"></i> Crédito</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <i class="fas fa-calendar-alt"></i>
+      <h3 id="totalSolicitacoes">—</h3>
+      <p>Total de Solicitações</p>
+    </div>
+    <div class="stat-card s-pendente">
+      <i class="fas fa-hourglass-half"></i>
+      <h3 id="solicitacoesPendentes">—</h3>
+      <p>Pendentes</p>
+    </div>
+    <div class="stat-card s-aprovado">
+      <i class="fas fa-check-circle"></i>
+      <h3 id="solicitacoesAprovadas">—</h3>
+      <p>Aprovadas</p>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="section-header">
+    <div>
+      <span class="section-title-tag">✦ HISTÓRICO ✦</span>
+      <div class="section-title">Minhas <em>Solicitações</em></div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Período</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Observação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="solicitacoesBody">
+        <tr class="row-empty"><td colspan="9">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     SCRIPTS — backend 100% intacto
+============================================================ -->
+<script>
+    var host = window.location.hostname;
+    var API_URL = (host === '' || host === 'localhost' || host === '127.0.0.1')
+        ? 'http://localhost:8888/CasaNanquim/api'
+        : 'http://' + host + ':8888/CasaNanquim/api';
+
+    // ===== LOGIN =====
+    function verificarLogin() {
+        var id   = localStorage.getItem('tatuadorId');
+        var nome = localStorage.getItem('tatuadorNome');
+        if (!id) { window.location.href = 'login-tatuador.html'; return false; }
+        document.getElementById('userName').textContent = nome || 'Tatuador';
+        return true;
+    }
+
+    // ===== MODAIS =====
+    function abrirModal(id)  { document.getElementById(id).classList.add('ativo'); }
+    function fecharModal(id) { document.getElementById(id).classList.remove('ativo'); }
+    document.querySelectorAll('.modal-overlay').forEach(function(el) {
+        el.addEventListener('click', function(e) { if (e.target === el) fecharModal(el.id); });
+    });
+
+    // Abre pop-up de sucesso se veio da página de reserva
+    (function() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.get('reserva') === 'sucesso') {
+            abrirModal('modalSucesso');
+            history.replaceState({}, '', window.location.pathname);
+        }
+    })();
+
+    // ===== CARREGAR SOLICITAÇÕES =====
+    function carregarSolicitacoes() {
+        fetch(API_URL + '/tatuador/solicitacoes', { credentials: 'include' })
+        .then(function(r) {
+            if (r.status === 401 || r.status === 403) {
+                localStorage.removeItem('tatuadorId');
+                localStorage.removeItem('tatuadorNome');
+                window.location.href = 'login-tatuador.html';
+                return null;
+            }
+            return r.json();
+        })
+        .then(function(lista) {
+            if (!lista) return;
+            renderSolicitacoes(lista);
+            renderStats(lista);
+        })
+        .catch(function(err) {
+            var av = document.getElementById('avisoErro');
+            av.style.display = 'block';
+            av.textContent = 'Erro ao carregar. Verifique se o Tomcat está rodando.';
+            document.getElementById('solicitacoesBody').innerHTML =
+                '<tr class="row-empty"><td colspan="9">Falha ao conectar com o servidor.</td></tr>';
+            console.error(err);
+        });
+    }
+
+    function diffHorasAteData(dataStr) {
+        if (!dataStr) return -1;
+        var p = dataStr.split('-');
+        var dataReserva = new Date(p[0], p[1]-1, p[2]);
+        dataReserva.setHours(0,0,0,0);
+        var hoje = new Date(); hoje.setHours(0,0,0,0);
+        return (dataReserva - hoje) / (1000 * 60 * 60);
+    }
+
+    function renderSolicitacoes(lista) {
+        var tbody = document.getElementById('solicitacoesBody');
+        if (!lista || lista.length === 0) {
+            tbody.innerHTML = '<tr class="row-empty"><td colspan="9">Nenhuma solicitação encontrada. Clique em "+ Nova Reserva"!</td></tr>';
+            return;
+        }
+        var badgeMap = {
+            PENDENTE:   'badge-pendente',
+            CONFIRMADO: 'badge-confirmado',
+            CANCELADO:  'badge-cancelado',
+            CONCLUIDO:  'badge-concluido'
+        };
+
+        tbody.innerHTML = lista.map(function(s) {
+            var badgeClass = badgeMap[s.status] || 'badge-pendente';
+            var horas      = diffHorasAteData(s.dataSolicitacao);
+            var ativa      = s.status !== 'CANCELADO' && s.status !== 'CONCLUIDO';
+            var dentro48   = horas < 48;
+
+            var btnAlterar  = '';
+            var btnCancelar = '';
+
+            if (ativa) {
+                if (!dentro48) {
+                    btnAlterar = '<button class="btn-acao btn-alterar" onclick="abrirModalAlterar(' + s.id + ',\'' + s.dataSolicitacao + '\',\'' + s.horarioInicio + '\',\'' + s.periodoEscolhido + '\')">' +
+                        '<i class="fas fa-calendar-alt"></i> Alterar data</button>';
+                } else {
+                    btnAlterar = '<button class="btn-acao btn-alterar" disabled title="Alteração deve ser feita com 48h de antecedência">' +
+                        '<i class="fas fa-calendar-alt"></i> Alterar data</button>';
+                }
+                if (!dentro48) {
+                    btnCancelar = '<button class="btn-acao btn-cancelar-res" onclick="confirmarCancelamento(' + s.id + ')">' +
+                        '<i class="fas fa-times"></i> Cancelar</button>';
+                } else {
+                    btnCancelar = '<button class="btn-acao btn-cancelar-res" disabled title="Cancelamento deve ser feito com 48h de antecedência">' +
+                        '<i class="fas fa-times"></i> Cancelar</button>';
+                }
+            }
+
+            var acoes = (btnAlterar || btnCancelar)
+                ? ('<div style="display:flex;gap:6px;flex-wrap:wrap;">' + btnAlterar + btnCancelar + '</div>')
+                : '<span style="color:#555;font-size:12px;">—</span>';
+
+            return '<tr>' +
+                '<td style="color:#888;">' + s.id + '</td>' +
+                '<td>' + (s.dataSolicitacao || '-') + '</td>' +
+                '<td>' + (s.horarioInicio  || '-') + '</td>' +
+                '<td>' + (s.horarioFim     || '-') + '</td>' +
+                '<td>' + (s.periodoEscolhido || '-') + '</td>' +
+                '<td>R$ ' + (s.valor || 0).toFixed(2) + '</td>' +
+                '<td><span class="badge ' + badgeClass + '">' + (s.status || 'PENDENTE') + '</span></td>' +
+                '<td style="color:#888;font-size:0.82rem;">' + (s.observacao ? s.observacao.substring(0,28) + '...' : '-') + '</td>' +
+                '<td>' + acoes + '</td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function renderStats(lista) {
+        document.getElementById('totalSolicitacoes').textContent    = lista.length;
+        document.getElementById('solicitacoesPendentes').textContent = lista.filter(function(s){ return s.status === 'PENDENTE'; }).length;
+        document.getElementById('solicitacoesAprovadas').textContent = lista.filter(function(s){ return s.status === 'CONFIRMADO' || s.status === 'CONCLUIDO'; }).length;
+    }
+
+    // ===== CANCELAR =====
+    var idParaCancelar = null;
+    function confirmarCancelamento(id) { idParaCancelar = id; abrirModal('modalCancelar'); }
+    document.getElementById('btnConfirmarCancelamento').addEventListener('click', function() {
+        if (!idParaCancelar) return;
+        var btn = this; btn.disabled = true; btn.textContent = 'Cancelando...';
+        fetch(API_URL + '/tatuador/cancelar/' + idParaCancelar, {
+            method: 'PUT', headers: {'Content-Type':'application/json'},
+            credentials: 'include', body: JSON.stringify({status:'CANCELADO'})
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            fecharModal('modalCancelar');
+            if (res.success) carregarSolicitacoes();
+            else alert('Erro ao cancelar: ' + (res.error || 'tente novamente.'));
+        })
+        .catch(function(){ fecharModal('modalCancelar'); alert('Erro ao conectar com o servidor.'); })
+        .finally(function(){ btn.disabled = false; btn.textContent = 'Confirmar cancelamento'; idParaCancelar = null; });
+    });
+
+    // ===== ALTERAR DATA =====
+    var reservaParaAlterar = null;
+
+    function abrirModalAlterar(id, dataAtual, horarioAtual, periodo) {
+        reservaParaAlterar = { id: id, periodo: periodo };
+        var amanha = new Date(); amanha.setDate(amanha.getDate() + 1);
+        var minData = amanha.getFullYear() + '-' +
+            String(amanha.getMonth()+1).padStart(2,'0') + '-' +
+            String(amanha.getDate()).padStart(2,'0');
+        var novaDataInput = document.getElementById('novaData');
+        novaDataInput.min   = minData;
+        novaDataInput.value = '';
+        document.getElementById('novoHorario').innerHTML = '<option value="">Selecione uma data primeiro</option>';
+        document.getElementById('novoHorarioFim').value  = '';
+        document.getElementById('infoNovoFim').textContent = '';
+        abrirModal('modalAlterar');
+    }
+
+    document.getElementById('novaData').addEventListener('change', function() {
+        var data = this.value;
+        if (!data) return;
+        fetch(API_URL + '/horarios-disponiveis-espaco?data=' + data)
+        .then(function(r){ return r.json(); })
+        .then(function(ocupados){
+            var todos  = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+            var livres = todos.filter(function(h){ return !ocupados.includes(h); });
+            var sel    = document.getElementById('novoHorario');
+            if (livres.length > 0) {
+                sel.innerHTML = '<option value="">Selecione...</option>' +
+                    livres.map(function(h){ return '<option value="'+h+'">'+h+'</option>'; }).join('');
+            } else {
+                sel.innerHTML = '<option value="">Sem horários disponíveis nesta data</option>';
+            }
+            document.getElementById('novoHorarioFim').value = '';
+            document.getElementById('infoNovoFim').textContent = '';
+        })
+        .catch(function(e){ console.error(e); });
+    });
+
+    document.getElementById('novoHorario').addEventListener('change', function() {
+        var inicio = this.value;
+        if (!inicio || !reservaParaAlterar) return;
+        var duracao = 0;
+        if (reservaParaAlterar.periodo === '2_HORAS')      duracao = 2;
+        else if (reservaParaAlterar.periodo === 'MEIO_PERIODO') duracao = 4;
+        else if (reservaParaAlterar.periodo === 'DIA_INTEIRO')  duracao = 8;
+        if (!duracao) return;
+        var h = parseInt(inicio.split(':')[0]);
+        var m = inicio.split(':')[1];
+        var fimH = h + duracao;
+        if (fimH > 20) {
+            alert('Este horário ultrapassa o limite de funcionamento (20:00). Escolha outro.');
+            this.value = '';
+            document.getElementById('novoHorarioFim').value = '';
+            return;
+        }
+        var fim = String(fimH).padStart(2,'0') + ':' + m;
+        document.getElementById('novoHorarioFim').value = fim;
+        document.getElementById('infoNovoFim').textContent = 'Calculado automaticamente (+' + duracao + 'h)';
+    });
+
+    document.getElementById('btnConfirmarAlteracao').addEventListener('click', function() {
+        var novaData   = document.getElementById('novaData').value;
+        var novoInicio = document.getElementById('novoHorario').value;
+        var novoFim    = document.getElementById('novoHorarioFim').value;
+        if (!novaData || !novoInicio || !novoFim) {
+            alert('Selecione a nova data e o horário de início.');
+            return;
+        }
+        var btn = this; btn.disabled = true; btn.textContent = 'Salvando...';
+        fetch(API_URL + '/tatuador/alterar-data/' + reservaParaAlterar.id, {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'},
+            credentials: 'include',
+            body: JSON.stringify({ dataSolicitacao: novaData, horarioInicio: novoInicio, horarioFim: novoFim })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+            fecharModal('modalAlterar');
+            if (res.success) carregarSolicitacoes();
+            else alert('Erro ao alterar: ' + (res.error || 'tente novamente.'));
+        })
+        .catch(function(){ fecharModal('modalAlterar'); alert('Erro ao conectar com o servidor.'); })
+        .finally(function(){ btn.disabled = false; btn.textContent = 'Confirmar alteração'; reservaParaAlterar = null; });
+    });
+
+    // ===== LOGOUT =====
+    function logout() {
+        fetch(API_URL + '/logout', { method: 'POST', credentials: 'include' }).catch(function(){});
+        localStorage.removeItem('tatuadorId');
+        localStorage.removeItem('tatuadorNome');
+        window.location.href = 'index.html';
+    }
+
+    if (verificarLogin()) carregarSolicitacoes();
+</script>
+</body>
+</html>
