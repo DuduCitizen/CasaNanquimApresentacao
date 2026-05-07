@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5f1">
+  <title>Admin | Casa Nanquim</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="ink-canvas" aria-hidden="true">
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-stroke"></div>
+  <div class="ink-stroke"></div>
+</div>
+<div class="paper-grain" aria-hidden="true"></div>
+
+<!-- ==================== SIDEBAR ==================== -->
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <img src="img/logooficial.png" alt="Casa Nanquim" onerror="this.style.display='none'">
+    <div class="sidebar-brand-name">Casa <em>Nanquim</em></div>
+    <div class="sidebar-brand-sub">Painel Administrativo</div>
+  </div>
+
+  <div class="sidebar-sep"></div>
+
+  <div class="user-badge">
+    <i class="fas fa-user-circle"></i>
+    <span>Administrador</span>
+  </div>
+
+  <nav>
+    <a class="active" id="nav-dashboard" onclick="showSection('dashboard')">
+      <i class="fas fa-chart-line"></i> Dashboard
+    </a>
+    <a id="nav-tatuadores" onclick="showSection('tatuadores')">
+      <i class="fas fa-users"></i> Tatuadores
+    </a>
+    <a id="nav-solicitacoes" onclick="showSection('solicitacoes')">
+      <i class="fas fa-calendar-check"></i> Solicitações
+    </a>
+    <a id="nav-configuracoes" onclick="showSection('configuracoes')">
+      <i class="fas fa-cog"></i> Configurações
+    </a>
+    <a href="index.html" target="_blank">
+      <i class="fas fa-globe"></i> Ver Site
+    </a>
+  </nav>
+
+  <div class="sidebar-sep"></div>
+
+  <button class="logout-btn" onclick="logout()">
+    <i class="fas fa-sign-out-alt"></i> Sair
+  </button>
+</div>
+
+<!-- ==================== MAIN ==================== -->
+<div class="main-content">
+
+  <div id="aviso" class="aviso"></div>
+
+  <!-- DASHBOARD -->
+  <div id="sec-dashboard">
+    <div class="page-header">
+      <div class="page-tag">✦ Visão Geral ✦</div>
+      <h1 class="page-title">Dash<em>board</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-chart-line"></i> Resumo</h3>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-number">—</div>
+          <div class="stat-label">Carregando...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TATUADORES -->
+  <div id="sec-tatuadores" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Cadastros ✦</div>
+      <h1 class="page-title">Tatua<em>dores</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-users"></i> Tatuadores Cadastrados</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th>
+              <th>Instagram</th><th>Especialidade</th><th>Reservas</th>
+              <th>Cadastro</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbTatuadores"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLICITAÇÕES -->
+  <div id="sec-solicitacoes" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Agendamentos ✦</div>
+      <h1 class="page-title">Solicita<em>ções</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-calendar-check"></i> Solicitações de Reserva</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Tatuador</th><th>Data</th><th>Horário</th>
+              <th>Período</th><th>Valor</th><th>Status</th><th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbSolicitacoes"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIGURAÇÕES -->
+  <div id="sec-configuracoes" style="display:none;">
+    <div class="page-header">
+      <div class="page-tag">✦ Parâmetros ✦</div>
+      <h1 class="page-title">Configura<em>ções</em></h1>
+      <div class="ink-divider"></div>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-clock"></i> Horários de Funcionamento</h3>
+      <div id="listaHorarios"></div>
+      <button class="btn-add" onclick="adicionarHorario()">
+        <i class="fas fa-plus"></i> Adicionar Horário
+      </button>
+      <p style="color:var(--ink-light);font-size:.73rem;margin-top:10px;">
+        Formato: HH:MM — ex: 09:00
+      </p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-calendar-times"></i> Dias Fechados</h3>
+      <div id="listaDias"></div>
+      <button class="btn-add" onclick="adicionarDiaFechado()">
+        <i class="fas fa-plus"></i> Adicionar Dia Fechado
+      </button>
+      <p style="color:var(--ink-light);font-size:.73rem;margin-top:10px;">
+        Ex: domingo, segunda, 2025-12-25
+      </p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-tag"></i> Preços do Espaço</h3>
+      <div id="listaPrecos"></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-bg" id="modalDet">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Solicitação <span id="det-id">#—</span></h3>
+      <button class="modal-fechar" onclick="fecharModal()">
+        <i class="fas fa-times" style="font-size:.72rem;"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="det-secao">
+        <div class="det-titulo">Tatuador</div>
+        <div class="det-grid">
+          <div class="det-item"><label>Nome</label><span id="det-nome">—</span></div>
+          <div class="det-item"><label>Status</label><span id="det-badge">—</span></div>
+          <div class="det-item"><label>Criado em</label><span id="det-criado">—</span></div>
+        </div>
+      </div>
+      <div class="det-secao">
+        <div class="det-titulo">Data e Horário</div>
+        <div class="det-grid">
+          <div class="det-item"><label>Data</label><span id="det-data">—</span></div>
+          <div class="det-item"><label>Início</label><span id="det-inicio">—</span></div>
+          <div class="det-item"><label>Fim</label><span id="det-fim">—</span></div>
+          <div class="det-item"><label>Período</label><span id="det-periodo">—</span></div>
+        </div>
+      </div>
+      <div class="det-secao">
+        <div class="det-titulo">Financeiro</div>
+        <div class="det-grid">
+          <div class="det-item">
+            <label>Valor</label>
+            <span id="det-valor" style="font-size:1.2rem;font-weight:600;color:var(--accent);font-family:var(--font-d);">—</span>
+          </div>
+          <div class="det-item">
+            <label>Pagamento</label>
+            <span style="color:var(--ink-light);font-size:.78rem;line-height:1.5;">Presencial no dia<br>(Pix / Débito / Crédito)</span>
+          </div>
+        </div>
+      </div>
+      <div class="det-secao">
+        <div class="det-titulo">Observação do tatuador</div>
+        <div class="det-obs-box" id="det-obs"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <label style="font-size:.65rem;color:var(--ink-light);letter-spacing:1px;text-transform:uppercase;">
+          Alterar status:
+        </label>
+        <select id="det-select">
+          <option value="PENDENTE">Pendente</option>
+          <option value="CONFIRMADO">Confirmado</option>
+          <option value="CANCELADO">Cancelado</option>
+          <option value="CONCLUIDO">Concluído</option>
+        </select>
+        <button class="btn-mf-salvar" onclick="salvarStatusModal()">
+          <i class="fas fa-save"></i> Salvar
+        </button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-mf-fechar"  onclick="fecharModal()">Fechar</button>
+        <button class="btn-mf-excluir" onclick="excluirDoModal()">
+          <i class="fas fa-trash"></i> Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

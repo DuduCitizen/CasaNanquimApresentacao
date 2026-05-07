@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Casa Nanquim</title>
+
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/dashboard-tatuador.css">
+</head>
+<body>
+
+<div class="bg-texture"></div>
+<div class="ink-blobs"><div class="ink-blob"></div><div class="ink-blob"></div></div>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+<aside class="admin-sidebar">
+  <div class="sidebar-brand">
+    <img src="img/logooficial.png" alt="Casa Nanquim" onerror="this.style.display='none'">
+    <h3>Casa Nanquim</h3>
+    <p>Área do Tatuador</p>
+  </div>
+  <hr class="sidebar-divider">
+
+  <div class="sidebar-user">
+    <div class="sidebar-user-avatar"><i class="fas fa-user"></i></div>
+    <div class="sidebar-user-info">
+      <span class="sidebar-user-label">Logado como</span>
+      <span class="sidebar-user-name" id="userName">—</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="#" class="active"><i class="fas fa-calendar-check"></i> Minhas Reservas</a>
+    <a href="solicitar-reserva.html"><i class="fas fa-plus-circle"></i> Nova Reserva</a>
+    <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> Ver Site</a>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+  <button class="sidebar-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+</aside>
+
+<!-- ============================================================
+     MODAIS
+============================================================ -->
+
+<!-- Sucesso -->
+<div class="modal-overlay" id="modalSucesso">
+  <div class="modal">
+    <div class="modal-icone">🎉</div>
+    <h3>Reserva solicitada!</h3>
+    <p>Sua solicitação foi enviada e está aguardando confirmação do estúdio.</p>
+    <div class="modal-aviso">
+      <i class="fas fa-money-bill-wave"></i>
+      <strong>Pagamento presencial:</strong> o pagamento deve ser realizado <strong>no dia da sua reserva</strong>, diretamente no estúdio Casa Nanquim. Não é necessário pagar nenhum valor antecipadamente.
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-ok" onclick="fecharModal('modalSucesso')">Entendido ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cancelar -->
+<div class="modal-overlay" id="modalCancelar">
+  <div class="modal">
+    <div class="modal-icone">⚠️</div>
+    <h3>Cancelar reserva</h3>
+    <p>Você tem certeza que deseja cancelar esta reserva?</p>
+    <div class="modal-aviso">
+      <i class="fas fa-clock"></i>
+      <strong>Atenção:</strong> cancelamentos devem ser feitos com no mínimo <strong>48 horas de antecedência</strong> em relação à data reservada. Cancelamentos fora deste prazo serão cobrados 75% do valor da reserva.
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-cancel" onclick="fecharModal('modalCancelar')">Voltar</button>
+      <button class="btn-modal-danger" id="btnConfirmarCancelamento">Confirmar cancelamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Alterar data -->
+<div class="modal-overlay" id="modalAlterar">
+  <div class="modal">
+    <div class="modal-icone">📅</div>
+    <h3>Alterar data da reserva</h3>
+    <p>Escolha a nova data e horário para a sua reserva.</p>
+    <div class="modal-aviso">
+      <i class="fas fa-clock"></i>
+      <strong>Lembrete:</strong> alterações devem ser solicitadas com no mínimo <strong>48 horas de antecedência</strong> em relação à data original da reserva.
+    </div>
+    <hr class="modal-divider">
+    <div class="modal-form-group">
+      <label><i class="fas fa-calendar-alt" style="margin-right:5px;color:var(--accent);"></i>Nova data</label>
+      <input type="date" id="novaData" min="">
+    </div>
+    <div class="modal-form-group">
+      <label><i class="fas fa-clock" style="margin-right:5px;color:var(--accent);"></i>Novo horário de início</label>
+      <select id="novoHorario">
+        <option value="">Selecione uma data primeiro</option>
+      </select>
+    </div>
+    <div class="modal-form-group">
+      <label><i class="fas fa-hourglass-end" style="margin-right:5px;color:var(--accent);"></i>Horário de fim</label>
+      <input type="text" id="novoHorarioFim" readonly placeholder="Calculado automaticamente">
+      <p class="info-text" id="infoNovoFim"></p>
+    </div>
+    <div class="modal-botoes">
+      <button class="btn-modal-cancel" onclick="fecharModal('modalAlterar')">Cancelar</button>
+      <button class="btn-modal-azul" id="btnConfirmarAlteracao">Confirmar alteração</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT
+============================================================ -->
+<main class="admin-main">
+
+  <div class="page-header">
+    <div class="page-header-tag">✦ ÁREA DO TATUADOR ✦</div>
+    <div class="page-header-row">
+      <h1>Minhas <em>Reservas</em></h1>
+      <button class="btn-nova-reserva" onclick="window.location.href='solicitar-reserva.html'">
+        <i class="fas fa-plus"></i> Nova Reserva
+      </button>
+    </div>
+  </div>
+
+  <div id="avisoErro" class="aviso-erro"></div>
+
+  <div class="banner-pagamento">
+    <div class="bp-icon"><i class="fas fa-credit-card"></i></div>
+    <div class="bp-text">
+      <span class="bp-title">Pagamento realizado presencialmente no dia da reserva</span>
+      <span class="bp-sub">Não é necessário pagar antecipadamente. Aceitamos:</span>
+    </div>
+    <div class="banner-metodos">
+      <span class="metodo-tag pix"><i class="fas fa-qrcode"></i> Pix</span>
+      <span class="metodo-tag debito"><i class="fas fa-credit-card"></i> Débito</span>
+      <span class="metodo-tag credito"><i class="fas fa-credit-card"></i> Crédito</span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <i class="fas fa-calendar-alt"></i>
+      <h3 id="totalSolicitacoes">—</h3>
+      <p>Total de Solicitações</p>
+    </div>
+    <div class="stat-card s-pendente">
+      <i class="fas fa-hourglass-half"></i>
+      <h3 id="solicitacoesPendentes">—</h3>
+      <p>Pendentes</p>
+    </div>
+    <div class="stat-card s-aprovado">
+      <i class="fas fa-check-circle"></i>
+      <h3 id="solicitacoesAprovadas">—</h3>
+      <p>Aprovadas</p>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div>
+      <span class="section-title-tag">✦ HISTÓRICO ✦</span>
+      <div class="section-title">Minhas <em>Solicitações</em></div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Início</th>
+          <th>Fim</th>
+          <th>Período</th>
+          <th>Valor</th>
+          <th>Status</th>
+          <th>Observação</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="solicitacoesBody">
+        <tr class="row-empty"><td colspan="9">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script src="js/dashboard-tatuador.js"></script>
+</body>
+</html>
