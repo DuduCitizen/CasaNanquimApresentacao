@@ -526,10 +526,19 @@ h2 em { font-style: italic; font-weight: 300; }
     grid-row: span 1;
     height: 60vw;
   }
+
+  .navbar, .navbar.scrolled {
+  padding: .6rem 0;
+  }
+
+  .logo img, .navbar.scrolled .logo img {
+  height: 32px;
+  }
   .lightbox-prev { left: 8px; }
   .lightbox-next { right: 8px; }
   #galeria { padding: 64px 0; }
 }
+
 @media (max-width: 480px) {
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery-item:first-child { grid-column: span 2; grid-row: span 1; height: 55vw; }
