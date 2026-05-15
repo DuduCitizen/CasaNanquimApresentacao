@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="Casa Nanquim — Estúdio de Tatuagem Feminino em Vila Matilde, SP.">
+  <meta name="theme-color" content="#f7f5f1">
+  <title>Casa Nanquim | Estúdio de Tatuagem</title>
+
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+    /* ── Botão fechar menu (X) ─────────────────────────── */
+    .nav-close-item {
+      display: none !important;
+    }
+
+    @media (max-width: 768px) {
+      /* Trava scroll do body quando menu está aberto */
+      body.menu-open {
+        overflow: hidden;
+        /* Evita salto de layout em iOS quando overflow muda */
+        position: fixed;
+        width: 100%;
+      }
+
+      /* Item do botão X — posicionado no topo do painel */
+      .nav-close-item {
+        display: block !important;
+        position: absolute !important;
+        top: 12px;
+        right: 14px;
+        border-bottom: none !important;
+        width: auto !important;
+        padding: 0 !important;
+      }
+
+      .nav-close-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: 1px solid var(--ink-border);
+        color: var(--ink-mid);
+        font-size: .9rem;
+        cursor: pointer;
+        transition: background .22s, color .22s, border-color .22s;
+      }
+
+      .nav-close-btn:hover,
+      .nav-close-btn:active {
+        background: var(--ink-faint);
+        color: var(--ink);
+        border-color: var(--ink-border-h);
+      }
+
+      /* Garante altura real do viewport em iOS Safari (dvh) */
+      .nav-links {
+        height: 100vh;         /* fallback */
+        height: 100dvh;        /* suporte moderno */
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-transition" id="pageTransition">
+  <div class="transition-content">
+    <img src="img/logooficial.png" alt="Casa Nanquim" class="transition-logo" onerror="this.style.display='none'">
+    <div class="transition-line"></div>
+    <div class="transition-sub">Onde a tinta encontra a pele</div>
+  </div>
+</div>
+
+<div class="ink-canvas" aria-hidden="true">
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-stroke"></div>
+  <div class="ink-stroke"></div>
+</div>
+<div class="paper-grain" aria-hidden="true"></div>
+
+<a href="#" class="float-home" aria-label="Voltar ao início do site">
+  <i class="fas fa-home" aria-hidden="true"></i>
+</a>
+
+<div class="content">
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <img src="img/logooficial.png" alt="Casa Nanquim" onerror="this.outerHTML='<span style=&quot;font-family:Cormorant Garamond,serif;font-size:1.4rem;font-weight:600;letter-spacing:-.5px;&quot;>Casa Nanquim</span>'">
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li class="nav-close-item">
+          <button class="nav-close-btn" id="navClose" aria-label="Fechar menu">
+            <i class="fas fa-times" aria-hidden="true"></i>
+          </button>
+        </li>
+        <li><a href="#inicio"      onclick="fecharMenu()">Início</a></li>
+        <li><a href="#sobre"       onclick="fecharMenu()">Sobre</a></li>
+        <li><a href="#alugar"      onclick="fecharMenu()">Alugar Espaço</a></li>
+        <li><a href="#localizacao" onclick="fecharMenu()">Localização</a></li>
+        <li class="nav-cta"><a href="login-tatuador.html" onclick="fecharMenu()">
+          <i class="fas fa-paint-brush" style="font-size:.62rem;" aria-hidden="true"></i> Área do Tatuador
+        </a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section id="inicio" class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <video autoplay muted loop playsinline preload="none" id="heroVideo">
+        <source src="img/1.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-tagline">✦ 6 tatuadoras · 6 estilos únicos ✦</div>
+      <h1>Casa <em>Nanquim</em></h1>
+      <p>tatuagens com identidade · do delicado ao autoral</p>
+      <div class="hero-cta-wrap">
+        <a href="login-tatuador.html" class="btn">
+          <i class="fas fa-paint-brush" style="font-size:.65rem;" aria-hidden="true"></i>
+          Área do Tatuador
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <div class="section-sep" aria-hidden="true"></div>
+
+  <div class="container">
+    <section id="sobre">
+      <div class="reveal">
+        <span class="h2-tag">✦ O Estúdio ✦</span>
+        <h2>Sobre a <em>Casa Nanquim</em></h2>
+        <div class="ink-divider" aria-hidden="true"></div>
+      </div>
+      <div class="sobre-content">
+        <div class="sobre-text reveal-left">
+          <p>A Casa Nanquim é um estúdio de tatuagem feminino, moderno e acolhedor, localizado em Vila Matilde. Reunimos tatuadoras com estilos únicos para atender desde o traço mais delicado até o autoral mais marcante.</p>
+          <p>Nosso estúdio conta com ambiente climatizado, equipamentos de última geração, materiais descartáveis de alta qualidade e toda estrutura para sua segurança e conforto.</p>
+          <h3><i class="fas fa-crosshairs" style="margin-right:8px;font-size:.85rem;" aria-hidden="true"></i>Nossa Missão</h3>
+          <p>Valorizar a arte da tatuagem com excelência, segurança e criatividade, proporcionando um espaço acolhedor para tatuadoras e clientes.</p>
+          <div class="instagram-dm">
+            <a href="https://www.instagram.com/casananquim/" target="_blank" rel="noopener">
+              <i class="fab fa-instagram" aria-hidden="true"></i>
+              Agendamentos via DM @casananquim
+            </a>
+          </div>
+        </div>
+        <div class="sobre-stats reveal-right">
+          <div class="stat"><div class="stat-number">6</div><div>Tatuadoras</div></div>
+          <div class="stat"><div class="stat-number">6</div><div>Estilos Únicos</div></div>
+          <div class="stat"><div class="stat-number">+500</div><div>Tatuagens Realizadas</div></div>
+          <div class="stat"><div class="stat-number">2019</div><div>Ano de Fundação</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <section id="galeria">
+      <div class="section-header reveal" style="text-align:center;margin-bottom:56px;">
+        <span class="h2-tag">✦ PORTFÓLIO ✦</span>
+        <h2>Tatuagens <em>Realizadas</em></h2>
+        <div class="ink-divider" style="margin:1rem auto;" aria-hidden="true"></div>
+        <p style="font-size:.8rem;color:var(--ink-light);">Estilos únicos, traços que contam histórias</p>
+      </div>
+      <div class="gallery-grid reveal" id="galleryGrid"></div>
+    </section>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visualização da foto">
+      <button class="lightbox-close" id="lbClose" aria-label="Fechar"><i class="fas fa-times" aria-hidden="true"></i></button>
+      <button class="lightbox-prev" id="lbPrev" aria-label="Anterior"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+      <img class="lightbox-img" id="lbImg" src="" alt="">
+      <button class="lightbox-next" id="lbNext" aria-label="Próxima"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+    </div>
+
+    <section id="alugar">
+      <div class="reveal">
+        <span class="h2-tag">✦ Reserve seu Espaço ✦</span>
+        <h2>Alugue Nosso <em>Espaço</em></h2>
+        <div class="ink-divider" aria-hidden="true"></div>
+      </div>
+      <div class="alugar-grid">
+        <div class="plano-card reveal d1">
+          <i class="fas fa-clock" aria-hidden="true"></i>
+          <h3>2 Horas</h3>
+          <div class="preco">R$ 80</div>
+          <p>Ideal para sessões rápidas e touch-ups</p>
+          <a href="login-tatuador.html"><i class="fas fa-calendar-check" style="font-size:.65rem;" aria-hidden="true"></i> Reservar</a>
+        </div>
+        <div class="plano-card reveal d2">
+          <i class="fas fa-sun" aria-hidden="true"></i>
+          <h3>Meio Período</h3>
+          <div class="preco">R$ 150</div>
+          <p>4 horas · Sessões médias e detalhadas</p>
+          <a href="login-tatuador.html"><i class="fas fa-calendar-check" style="font-size:.65rem;" aria-hidden="true"></i> Reservar</a>
+        </div>
+        <div class="plano-card reveal d3">
+          <i class="fas fa-calendar-day" aria-hidden="true"></i>
+          <h3>Dia Inteiro</h3>
+          <div class="preco">R$ 250</div>
+          <p>8 horas · Projetos maiores e autorais</p>
+          <a href="login-tatuador.html"><i class="fas fa-calendar-check" style="font-size:.65rem;" aria-hidden="true"></i> Reservar</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="localizacao">
+      <div class="reveal">
+        <span class="h2-tag">✦ Onde Estamos ✦</span>
+        <h2><em>Localização</em></h2>
+        <div class="ink-divider" aria-hidden="true"></div>
+      </div>
+      <div class="localizacao-content">
+        <div class="info-local reveal-left">
+          <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span><strong>Endereço:</strong> R. José Mascarenhas, 1051 — Vila Matilde, São Paulo — SP, 03515-000</span></p>
+          <p><i class="fas fa-clock" aria-hidden="true"></i><span><strong>Funcionamento:</strong> Segunda a Sábado, 09h às 20h</span></p>
+          <p><i class="fas fa-subway" aria-hidden="true"></i><span><strong>Acesso:</strong> Próximo à estação de metrô Vila Matilde</span></p>
+          <p><i class="fab fa-instagram" aria-hidden="true"></i><span><strong>Instagram:</strong> <a href="https://www.instagram.com/casananquim/" target="_blank" rel="noopener">@casananquim</a></span></p>
+        </div>
+        <div class="mapa reveal-right">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3658.5!2d-46.570!3d-23.530!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5e5e5e5e5e5%3A0x5e5e5e5e5e5e5e5!2sR.%20Jos%C3%A9%20Mascarenhas%2C%201051%20-%20Vila%20Matilde%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2003515-000!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr" allowfullscreen loading="lazy" title="Localização da Casa Nanquim"></iframe>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="container text-center">
+      <div class="footer-brand reveal">
+        <img src="logo.png" alt="Casa Nanquim" onerror="this.src='img/logooficial.png'">
+      </div>
+      <div class="footer-tagline">Onde a tinta encontra a pele</div>
+      <div class="footer-social mb-3">
+        <a href="https://www.instagram.com/casananquim/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+      </div>
+      <div class="footer-links mb-3">
+        <a href="#inicio">Início</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#alugar">Alugar Espaço</a>
+        <a href="#localizacao">Localização</a>
+        <a href="login-tatuador.html">Tatuadores</a>
+      </div>
+      <div class="footer-copy">© <span id="currentYear"></span> CASA NANQUIM — Todos os direitos reservados</div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/index.js"></script>
+</body>
+</html>
