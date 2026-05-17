@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="description" content="Política de Privacidade — Casa Nanquim Estúdio de Tatuagem.">
+  <meta name="theme-color" content="#f7f5f1">
+  <title>Política de Privacidade | Casa Nanquim</title>
+
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* ============================================================
+       CASA NANQUIM — SISTEMA DE DESIGN (espelho do index.css)
+    ============================================================ */
+    :root {
+      --paper:        #f7f5f1;
+      --paper-warm:   #f0ede7;
+      --ink:          #141414;
+      --ink-mid:      #2a2a2a;
+      --ink-light:    #5a5a5a;
+      --ink-faint:    rgba(20,20,20,0.055);
+      --ink-border:   rgba(20,20,20,0.10);
+      --ink-border-h: rgba(20,20,20,0.22);
+      --accent:       #8b7355;
+      --font-d: 'Cormorant Garamond', serif;
+      --font-b: 'DM Sans', sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-inout:    cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    html { overflow-x: hidden; max-width: 100%; scroll-behavior: smooth; scroll-padding-top: 90px; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-b);
+      font-size: 15px; line-height: 1.65;
+      overflow-x: hidden; max-width: 100%;
+    }
+
+    /* ===== TEXTURA DE PAPEL ===== */
+    .paper-grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ===== BLOBS DE TINTA ===== */
+    .ink-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ink-blob {
+      position: absolute; border-radius: 60% 40% 55% 45% / 48% 52% 48% 52%;
+      filter: blur(50px); will-change: transform;
+      animation: blobDrift var(--blob-dur, 30s) ease-in-out infinite;
+    }
+    .ink-blob:nth-child(1) { width:580px; height:580px; top:-180px; left:-180px; background:radial-gradient(ellipse,rgba(20,20,20,.065),transparent 70%); --blob-dur:35s; }
+    .ink-blob:nth-child(2) { width:680px; height:680px; bottom:-220px; right:-220px; background:radial-gradient(ellipse,rgba(20,20,20,.045),transparent 70%); --blob-dur:42s; animation-delay:-12s; }
+    .ink-blob:nth-child(3) { width:380px; height:380px; top:38%; left:62%; background:radial-gradient(ellipse,rgba(139,115,85,.04),transparent 70%); --blob-dur:28s; animation-delay:-7s; }
+    @keyframes blobDrift {
+      0%,100%{ transform:translate3d(0,0,0) scale(1); border-radius:60% 40% 55% 45%/48% 52% 48% 52%; }
+      25%    { transform:translate3d(28px,-22px,0) scale(1.02); }
+      50%    { transform:translate3d(-20px,18px,0) scale(.98); }
+      75%    { transform:translate3d(16px,30px,0) scale(1.01); }
+    }
+
+    .content { position: relative; z-index: 10; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed; top: 0; width: 100%;
+      background: rgba(247,245,241,.88);
+      backdrop-filter: blur(18px) saturate(1.3);
+      -webkit-backdrop-filter: blur(18px) saturate(1.3);
+      padding: 1.1rem 0; z-index: 1001;
+      border-bottom: 1px solid var(--ink-border);
+      transition: padding .5s var(--ease-out-expo), background .5s var(--ease-out-expo), box-shadow .5s var(--ease-out-expo);
+    }
+    .navbar.scrolled { padding: .65rem 0; background: rgba(247,245,241,.97); box-shadow: 0 1px 24px rgba(20,20,20,.06); }
+    .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 1001; font-family: var(--font-d); font-size: 1.4rem; font-weight: 600; color: var(--ink); letter-spacing: -.5px; transition: opacity .3s; }
+    .logo:hover { opacity: .72; }
+    .logo img { height: 40px; width: auto; transition: height .5s var(--ease-out-expo); }
+    .navbar.scrolled .logo img { height: 34px; }
+    .nav-links { display: flex; gap: 0; list-style: none; align-items: center; }
+    .nav-links a { color: var(--ink); text-decoration: none; font-size: .68rem; font-weight: 500; letter-spacing: 1.8px; text-transform: uppercase; padding: 6px 12px; display: block; position: relative; transition: opacity .25s; font-family: var(--font-b); }
+    .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 12px; right: 12px; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: right; transition: transform .35s var(--ease-out-expo); }
+    .nav-links a:hover { opacity: .55; }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .nav-links .nav-cta a { border: 1px solid rgba(139,115,85,.3); margin-left: 8px; padding: 6px 16px; color: var(--accent); transition: all .35s var(--ease-out-expo); }
+    .nav-links .nav-cta a::after { display: none; }
+    .nav-links .nav-cta a:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); opacity: 1; }
+    .menu-toggle { display: none; background: none; border: none; color: var(--ink); font-size: 1rem; cursor: pointer; padding: 8px; z-index: 1001; }
+
+    /* ===== HERO INTERNO ===== */
+    .page-hero {
+      padding: 160px 0 80px;
+      background: var(--ink);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(139,115,85,.12) 0%, transparent 60%),
+                  radial-gradient(ellipse at 75% 30%, rgba(139,115,85,.07) 0%, transparent 50%);
+    }
+    /* grade decorativa de fundo */
+    .page-hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(247,245,241,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,245,241,.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .page-hero-inner { position: relative; z-index: 2; }
+    .page-hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: .58rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(247,245,241,.5);
+      background: rgba(247,245,241,.06);
+      border: 1px solid rgba(247,245,241,.1);
+      padding: .4rem 1.2rem; border-radius: 50px;
+      margin-bottom: 1.8rem; font-family: var(--font-b);
+      animation: heroReveal .9s var(--ease-out-expo) .2s both;
+    }
+    .page-hero h1 {
+      font-family: var(--font-d);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 500; letter-spacing: -2px; line-height: 1;
+      color: var(--paper); margin-bottom: 1.2rem;
+      animation: heroReveal .9s var(--ease-out-expo) .4s both;
+    }
+    .page-hero h1 em { font-style: italic; font-weight: 300; opacity: .7; }
+    .page-hero-meta {
+      font-size: .65rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(247,245,241,.3); margin-top: 1.4rem;
+      animation: heroReveal .9s var(--ease-out-expo) .6s both;
+      font-family: var(--font-b);
+    }
+    @keyframes heroReveal { from{ opacity:0; transform:translateY(18px); } to{ opacity:1; transform:translateY(0); } }
+
+    /* ===== ÍNDICE LATERAL (TOC) ===== */
+    .priv-layout {
+      max-width: 1200px; margin: 0 auto; padding: 80px 2rem;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky; top: 96px;
+    }
+    .toc-label {
+      font-size: .56rem; letter-spacing: 3.5px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.2rem; font-family: var(--font-b);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toc-label::after { content: ''; flex: 1; height: 1px; background: rgba(139,115,85,.25); }
+    .toc ul { list-style: none; }
+    .toc ul li { margin-bottom: 2px; }
+    .toc ul li a {
+      display: block;
+      color: var(--ink-light); text-decoration: none;
+      font-size: .7rem; font-weight: 500;
+      letter-spacing: .5px;
+      padding: 7px 12px;
+      border-left: 2px solid transparent;
+      transition: color .25s, border-color .25s, padding-left .25s var(--ease-out-expo);
+      font-family: var(--font-b);
+    }
+    .toc ul li a:hover,
+    .toc ul li a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      padding-left: 18px;
+    }
+    .toc-divider { height: 1px; background: var(--ink-border); margin: 16px 0; }
+
+    /* ===== CONTEÚDO ===== */
+    .priv-content { min-width: 0; }
+
+    .priv-section { margin-bottom: 72px; scroll-margin-top: 96px; }
+    .priv-section:last-child { margin-bottom: 0; }
+
+    .section-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .56rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem; font-family: var(--font-b);
+    }
+    .section-badge .badge-num {
+      width: 22px; height: 22px; border: 1px solid rgba(139,115,85,.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .6rem; font-weight: 600;
+    }
+
+    .priv-section h2 {
+      font-family: var(--font-d);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 500; letter-spacing: -.5px;
+      color: var(--ink); margin-bottom: 1rem; line-height: 1.15;
+    }
+    .priv-section h2 em { font-style: italic; font-weight: 300; }
+    .ink-divider { width: 36px; height: 1px; background: var(--accent); opacity: .45; margin-bottom: 1.8rem; }
+
+    .priv-section p {
+      color: var(--ink-light); line-height: 1.82;
+      margin-bottom: 16px; font-size: .92rem;
+    }
+    .priv-section p strong { color: var(--ink); font-weight: 600; }
+
+    /* lista estilizada */
+    .priv-list { list-style: none; margin: 16px 0 24px; }
+    .priv-list li {
+      position: relative; padding: 10px 14px 10px 36px;
+      color: var(--ink-light); font-size: .91rem; line-height: 1.7;
+      border-bottom: 1px solid var(--ink-faint);
+    }
+    .priv-list li:last-child { border-bottom: none; }
+    .priv-list li::before {
+      content: '✦';
+      position: absolute; left: 12px; top: 11px;
+      color: var(--accent); font-size: .55rem; opacity: .7;
+    }
+    .priv-list li strong { color: var(--ink); }
+
+    /* card de destaque */
+    .highlight-card {
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--ink-border);
+      padding: 28px 26px;
+      margin: 24px 0;
+      position: relative; overflow: hidden;
+    }
+    .highlight-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,115,85,.35), transparent);
+    }
+    .highlight-card.warn::before {
+      background: linear-gradient(90deg, transparent, rgba(180,120,60,.5), transparent);
+    }
+    .highlight-card .card-icon { font-size: 1.1rem; color: var(--accent); margin-bottom: 12px; display: block; }
+    .highlight-card p { font-size: .88rem; color: var(--ink-light); margin-bottom: 0; }
+    .highlight-card p strong { color: var(--ink); }
+
+    /* tabela de dados */
+    .data-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+    .data-table thead th {
+      font-size: .6rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent); font-family: var(--font-b); font-weight: 600;
+      padding: 12px 16px; text-align: left;
+      border-bottom: 1px solid rgba(139,115,85,.25);
+      background: rgba(139,115,85,.04);
+    }
+    .data-table tbody td {
+      padding: 13px 16px; font-size: .87rem; color: var(--ink-light);
+      border-bottom: 1px solid var(--ink-faint); vertical-align: top;
+      line-height: 1.6;
+    }
+    .data-table tbody td:first-child { color: var(--ink); font-weight: 500; }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover td { background: rgba(247,245,241,.6); }
+
+    /* badge de direito */
+    .rights-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 24px 0;
+    }
+    .right-item {
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--ink-border);
+      padding: 20px 18px;
+      position: relative;
+      transition: border-color .3s, transform .3s var(--ease-out-expo);
+    }
+    .right-item::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,115,85,.2), transparent);
+    }
+    .right-item:hover { border-color: var(--ink-border-h); transform: translateY(-2px); }
+    .right-item i { color: var(--accent); font-size: .9rem; margin-bottom: 10px; display: block; }
+    .right-item h4 { font-family: var(--font-d); font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .right-item p { font-size: .8rem; color: var(--ink-light); margin: 0; line-height: 1.6; }
+
+    /* contato destaque */
+    .contact-box {
+      background: var(--ink); color: var(--paper);
+      padding: 36px 32px;
+      position: relative; overflow: hidden;
+      margin-top: 32px;
+    }
+    .contact-box::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 20% 50%, rgba(139,115,85,.15), transparent 60%);
+    }
+    .contact-box h3 {
+      font-family: var(--font-d); font-size: 1.5rem; font-weight: 500;
+      color: var(--paper); margin-bottom: 1rem; position: relative; z-index: 1;
+    }
+    .contact-box h3 em { font-style: italic; font-weight: 300; opacity: .75; }
+    .contact-box p { font-size: .87rem; color: rgba(247,245,241,.5); margin-bottom: 20px; position: relative; z-index: 1; }
+    .contact-box a {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; border: 1px solid rgba(247,245,241,.25);
+      color: rgba(247,245,241,.75); padding: 11px 22px;
+      font-size: .68rem; font-weight: 600; letter-spacing: 1.5px;
+      text-transform: uppercase; text-decoration: none; font-family: var(--font-b);
+      transition: all .3s var(--ease-inout); position: relative; z-index: 1;
+    }
+    .contact-box a:hover { background: rgba(247,245,241,.08); color: var(--paper); border-color: rgba(247,245,241,.45); }
+
+    /* separador de seção */
+    .section-sep { height: 1px; background: linear-gradient(90deg, transparent, var(--ink-border), transparent); margin-bottom: 72px; }
+
+    /* ===== REVEAL ===== */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .8s var(--ease-out-expo), transform .8s var(--ease-out-expo); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-left  { opacity:0; transform:translateX(-24px); transition:opacity .8s var(--ease-out-expo), transform .8s var(--ease-out-expo); }
+    .reveal-left.visible  { opacity:1; transform:translateX(0); }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--ink); color: rgba(247,245,241,.45);
+      padding: 4rem 0 2.5rem; position: relative; z-index: 10;
+    }
+    .footer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg,transparent,rgba(247,245,241,.08),transparent); }
+    .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; flex-direction: column; align-items: center; }
+    .footer-brand img { height: 38px; filter: brightness(0) invert(1); opacity: .8; margin-bottom: 14px; }
+    .footer-tagline { font-size: .54rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(247,245,241,.2); margin-bottom: 1.4rem; }
+    .footer-social a { color: rgba(247,245,241,.35); font-size: 1.2rem; text-decoration: none; margin: 0 6px; transition: color .3s; }
+    .footer-social a:hover { color: var(--paper); }
+    .footer-social { margin-bottom: 1.2rem; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 0; justify-content: center; margin-bottom: 1.2rem; }
+    .footer-links a { color: rgba(247,245,241,.3); text-decoration: none; font-size: .63rem; letter-spacing: 1.2px; text-transform: uppercase; margin: 4px 10px; transition: color .3s; }
+    .footer-links a:hover { color: var(--paper); }
+    .footer-copy { font-size: .58rem; color: rgba(247,245,241,.15); margin-top: 1.6rem; letter-spacing: .5px; }
+
+    /* ===== FLOAT HOME ===== */
+    .float-home {
+      position: fixed; bottom: 26px; right: 26px; color: #5a5a5a;
+      width: 50px; height: 50px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; z-index: 1000; text-decoration: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,.18);
+      transition: transform .4s var(--ease-spring), box-shadow .4s, color .3s;
+      background: var(--paper);
+    }
+    .float-home:hover { transform: scale(1.12) rotate(-5deg); color: var(--accent); box-shadow: 0 8px 28px rgba(0,0,0,.25); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--paper-warm); }
+    ::-webkit-scrollbar-thumb { background: rgba(20,20,20,.2); border-radius: 4px; }
+    ::selection { background: rgba(139,115,85,.15); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .priv-layout { grid-template-columns: 200px 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      html, body { overflow-x: hidden; }
+      .ink-canvas, .paper-grain { display: none; }
+      .navbar { backdrop-filter: none; background: rgba(247,245,241,.97); }
+      .menu-toggle { display: block; }
+      .nav-links {
+        position: fixed; top: 0; right: -100%;
+        width: 70%; max-width: 280px; height: 100vh;
+        background: var(--paper); flex-direction: column;
+        justify-content: center; align-items: center;
+        gap: 1.8rem; transition: right .3s ease; z-index: 1000;
+        box-shadow: -6px 0 24px rgba(20,20,20,.1);
+        border-left: 1px solid var(--ink-border);
+      }
+      .nav-links.active { right: 0; }
+      .nav-links a { font-size: .9rem; }
+      .nav-links .nav-cta { margin-left: 0; }
+      .nav-links .nav-cta a { border: none; margin-left: 0; }
+      .priv-layout { grid-template-columns: 1fr; gap: 0; padding: 48px 1.2rem 64px; }
+      .toc { display: none; }
+      .page-hero { padding: 120px 1.2rem 60px; }
+      .rights-grid { grid-template-columns: 1fr; }
+      .data-table { font-size: .82rem; }
+      .data-table thead th, .data-table tbody td { padding: 10px 12px; }
+      .contact-box { padding: 28px 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .page-hero h1 { font-size: 2.4rem; }
+      .priv-section h2 { font-size: 1.5rem; }
+      .highlight-card { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ink-canvas" aria-hidden="true">
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+  <div class="ink-blob"></div>
+</div>
+<div class="paper-grain" aria-hidden="true"></div>
+
+<a href="index.html" class="float-home" aria-label="Voltar ao site">
+  <i class="fas fa-home" aria-hidden="true"></i>
+</a>
+
+<div class="content">
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="img/logooficial.png" alt="Casa Nanquim"
+             onerror="this.outerHTML='<span style=&quot;font-family:Cormorant Garamond,serif;font-size:1.4rem;font-weight:600;letter-spacing:-.5px;&quot;>Casa Nanquim</span>'">
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#inicio"      onclick="fecharMenu()">Início</a></li>
+        <li><a href="index.html#sobre"       onclick="fecharMenu()">Sobre</a></li>
+        <li><a href="index.html#alugar"      onclick="fecharMenu()">Alugar Espaço</a></li>
+        <li><a href="index.html#localizacao" onclick="fecharMenu()">Localização</a></li>
+        <li class="nav-cta"><a href="login-tatuador.html" onclick="fecharMenu()">
+          <i class="fas fa-paint-brush" style="font-size:.62rem;" aria-hidden="true"></i> Área do Tatuador
+        </a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO DA PÁGINA -->
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="page-hero-tag">✦ Transparência &amp; Confiança ✦</div>
+      <h1>Política de <em>Privacidade</em></h1>
+      <div class="page-hero-meta">Última atualização: Maio de 2026 &nbsp;·&nbsp; Casa Nanquim</div>
+    </div>
+  </section>
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="priv-layout">
+
+    <!-- ÍNDICE LATERAL -->
+    <aside class="toc" aria-label="Índice da política">
+      <div class="toc-label">Índice</div>
+      <ul id="tocList">
+        <li><a href="#s1">1. Quem somos</a></li>
+        <li><a href="#s2">2. Dados coletados</a></li>
+        <li><a href="#s3">3. Como usamos</a></li>
+        <li><a href="#s4">4. Armazenamento</a></li>
+        <li><a href="#s5">5. Compartilhamento</a></li>
+        <li><a href="#s6">6. Seus direitos</a></li>
+        <li><a href="#s7">7. Cookies</a></li>
+        <li><a href="#s8">8. Menores</a></li>
+        <li><a href="#s9">9. Alterações</a></li>
+        <li><a href="#s10">10. Contato</a></li>
+      </ul>
+      <div class="toc-divider"></div>
+      <ul>
+        <li><a href="index.html" style="color:var(--accent);">← Voltar ao site</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="priv-content" id="privContent">
+
+      <!-- AVISO LGPD -->
+      <div class="highlight-card reveal">
+        <span class="card-icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span>
+        <p>
+          Esta política está em conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais — LGPD (Lei nº 13.709/2018)</strong>.
+          Ao utilizar nossos serviços e criar uma conta na plataforma da Casa Nanquim, você concorda com os termos aqui descritos.
+        </p>
+      </div>
+
+      <!-- 1. QUEM SOMOS -->
+      <div class="section-sep" style="margin-top:48px;"></div>
+
+      <section class="priv-section reveal" id="s1">
+        <div class="section-badge"><span class="badge-num">01</span> Controlador de dados</div>
+        <h2>Quem <em>somos</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          A <strong>Casa Nanquim</strong> é um estúdio de tatuagem localizado na R. José Mascarenhas, 1051, Vila Matilde,
+          São Paulo — SP, 03515-000, doravante denominado <strong>"Controlador"</strong> para fins desta política.
+        </p>
+        <p>
+          Somos responsáveis pelas decisões referentes ao tratamento dos dados pessoais coletados por meio de nosso
+          site e plataforma de reservas, nos termos do art. 5º, VI da LGPD.
+        </p>
+        <p>
+          Qualquer dúvida pode ser encaminhada ao nosso Encarregado de Dados (DPO) pelo e-mail indicado na seção
+          <a href="#s10" style="color:var(--accent);font-weight:600;">10. Contato</a>.
+        </p>
+      </section>
+
+      <!-- 2. DADOS COLETADOS -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s2">
+        <div class="section-badge"><span class="badge-num">02</span> Coleta de dados</div>
+        <h2>Dados <em>coletados</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Ao criar uma conta e utilizar a Área do Tatuador, coletamos os seguintes dados pessoais:
+        </p>
+
+        <table class="data-table" aria-label="Dados pessoais coletados">
+          <thead>
+            <tr>
+              <th>Dado</th>
+              <th>Tipo</th>
+              <th>Finalidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Nome completo</td>
+              <td>Identificação</td>
+              <td>Autenticação e exibição no perfil</td>
+            </tr>
+            <tr>
+              <td>Endereço de e-mail</td>
+              <td>Contato / Autenticação</td>
+              <td>Login, recuperação de senha e comunicações</td>
+            </tr>
+            <tr>
+              <td>Senha (hash)</td>
+              <td>Segurança</td>
+              <td>Armazenada criptografada; nunca em texto simples</td>
+            </tr>
+            <tr>
+              <td>Número de telefone</td>
+              <td>Contato</td>
+              <td>Comunicação sobre reservas e agendamentos</td>
+            </tr>
+            <tr>
+              <td>Histórico de reservas</td>
+              <td>Uso da plataforma</td>
+              <td>Gestão de agendamentos e cobranças</td>
+            </tr>
+            <tr>
+              <td>Endereço IP / dispositivo</td>
+              <td>Técnico / Log</td>
+              <td>Segurança, prevenção de fraudes e logs de acesso</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Não coletamos dados sensíveis (origem racial, biometria, saúde, etc.) salvo quando
+          explicitamente informado e com seu consentimento específico.
+        </p>
+      </section>
+
+      <!-- 3. COMO USAMOS -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s3">
+        <div class="section-badge"><span class="badge-num">03</span> Uso dos dados</div>
+        <h2>Como <em>utilizamos</em> suas informações</h2>
+        <div class="ink-divider"></div>
+        <p>Seus dados são utilizados exclusivamente para as seguintes finalidades:</p>
+        <ul class="priv-list">
+          <li><strong>Autenticação e acesso:</strong> permitir que você acesse sua conta e gerencie suas reservas com segurança.</li>
+          <li><strong>Gestão de reservas:</strong> processar, confirmar e registrar reservas de espaço no estúdio.</li>
+          <li><strong>Comunicações operacionais:</strong> enviar confirmações, lembretes e informações sobre sua conta.</li>
+          <li><strong>Exibição de portfólio:</strong> com seu consentimento, exibir seus trabalhos na galeria pública do site.</li>
+          <li><strong>Segurança da plataforma:</strong> monitorar acessos, prevenir fraudes e garantir a integridade do sistema.</li>
+          <li><strong>Melhorias do serviço:</strong> analisar o uso da plataforma para otimizar a experiência (dados anonimizados).</li>
+          <li><strong>Cumprimento legal:</strong> atender obrigações legais e regulatórias quando aplicável.</li>
+        </ul>
+        <div class="highlight-card warn">
+          <span class="card-icon"><i class="fas fa-ban" aria-hidden="true"></i></span>
+          <p>
+            <strong>Não vendemos, alugamos nem comercializamos seus dados pessoais</strong> com terceiros
+            para fins de marketing. Seus dados são utilizados apenas para as finalidades descritas acima.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. ARMAZENAMENTO -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s4">
+        <div class="section-badge"><span class="badge-num">04</span> Armazenamento &amp; Segurança</div>
+        <h2>Como seus dados são <em>armazenados</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Seus dados são armazenados em <strong>servidores seguros</strong>, com acesso restrito e protegidos
+          pelas seguintes medidas técnicas e organizacionais:
+        </p>
+        <ul class="priv-list">
+          <li><strong>Criptografia de senhas:</strong> utilizamos algoritmos de hash seguro (bcrypt/Argon2) — sua senha nunca é armazenada em texto legível.</li>
+          <li><strong>Conexão HTTPS:</strong> toda comunicação entre seu navegador e nossos servidores é criptografada via TLS.</li>
+          <li><strong>Controle de acesso:</strong> somente membros autorizados da equipe têm acesso ao banco de dados, com logs de auditoria.</li>
+          <li><strong>Backups regulares:</strong> realizamos backups periódicos para garantir a disponibilidade e integridade dos dados.</li>
+          <li><strong>Autenticação segura:</strong> tokens de sessão com expiração automática e proteção contra ataques comuns (CSRF, XSS).</li>
+        </ul>
+
+        <div class="highlight-card">
+          <span class="card-icon"><i class="fas fa-clock" aria-hidden="true"></i></span>
+          <p>
+            <strong>Retenção:</strong> seus dados são mantidos enquanto sua conta estiver ativa. Ao solicitar a exclusão da conta,
+            os dados são removidos em até <strong>30 dias</strong>, salvo obrigação legal de retenção (ex.: registros fiscais,
+            que podem ser mantidos por até 5 anos conforme legislação).
+          </p>
+        </div>
+      </section>
+
+      <!-- 5. COMPARTILHAMENTO -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s5">
+        <div class="section-badge"><span class="badge-num">05</span> Compartilhamento</div>
+        <h2>Compartilhamento <em>de dados</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Seus dados pessoais podem ser compartilhados apenas nas seguintes situações excepcionais:
+        </p>
+        <ul class="priv-list">
+          <li>
+            <strong>Prestadores de serviços tecnológicos:</strong> provedores de hospedagem, banco de dados e infraestrutura que
+            atuam como <em>operadores</em> sob nossas instruções e com obrigações de confidencialidade.
+          </li>
+          <li>
+            <strong>Cumprimento legal:</strong> quando exigido por lei, decisão judicial ou autoridade competente (ex.: ANPD,
+            Ministério Público), mediante análise criteriosa e na extensão mínima necessária.
+          </li>
+          <li>
+            <strong>Proteção de direitos:</strong> em caso de investigação de fraudes ou violações aos nossos termos de uso.
+          </li>
+        </ul>
+        <p>
+          Em qualquer caso de compartilhamento com terceiros, exigimos contratualmente que esses terceiros
+          adotem medidas de segurança adequadas e tratem seus dados apenas para as finalidades especificadas.
+        </p>
+      </section>
+
+      <!-- 6. SEUS DIREITOS -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s6">
+        <div class="section-badge"><span class="badge-num">06</span> Direitos do titular</div>
+        <h2>Seus <em>direitos</em> segundo a LGPD</h2>
+        <div class="ink-divider"></div>
+        <p>
+          De acordo com os artigos 17 a 22 da LGPD, você, como titular dos dados, possui os seguintes direitos:
+        </p>
+
+        <div class="rights-grid">
+          <div class="right-item">
+            <i class="fas fa-eye" aria-hidden="true"></i>
+            <h4>Acesso</h4>
+            <p>Solicitar confirmação de existência e acesso completo aos seus dados que tratamos.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+            <h4>Correção</h4>
+            <p>Corrigir dados incompletos, inexatos ou desatualizados a qualquer momento.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+            <h4>Eliminação</h4>
+            <p>Solicitar a exclusão dos seus dados pessoais, respeitadas as obrigações legais de retenção.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-times-circle" aria-hidden="true"></i>
+            <h4>Revogação</h4>
+            <p>Revogar o consentimento dado a qualquer momento, sem prejuízo para os tratamentos anteriores.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-file-export" aria-hidden="true"></i>
+            <h4>Portabilidade</h4>
+            <p>Receber seus dados em formato estruturado e legível por máquina para migração.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <h4>Informação</h4>
+            <p>Saber com quais terceiros seus dados foram compartilhados e para qual finalidade.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-ban" aria-hidden="true"></i>
+            <h4>Oposição</h4>
+            <p>Opor-se ao tratamento realizado sem seu consentimento quando não houver base legal adequada.</p>
+          </div>
+          <div class="right-item">
+            <i class="fas fa-balance-scale" aria-hidden="true"></i>
+            <h4>Reclamação</h4>
+            <p>Peticionar à ANPD (Autoridade Nacional de Proteção de Dados) em caso de violação.</p>
+          </div>
+        </div>
+
+        <p style="margin-top:16px;">
+          Para exercer qualquer desses direitos, entre em contato pelo e-mail indicado na seção
+          <a href="#s10" style="color:var(--accent);font-weight:600;">10. Contato</a>.
+          Responderemos em até <strong>15 dias úteis</strong>, conforme previsto na LGPD.
+        </p>
+      </section>
+
+      <!-- 7. COOKIES -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s7">
+        <div class="section-badge"><span class="badge-num">07</span> Cookies</div>
+        <h2>Uso de <em>cookies</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Utilizamos cookies e tecnologias similares para melhorar sua experiência de navegação.
+          Os cookies que utilizamos são:
+        </p>
+        <ul class="priv-list">
+          <li>
+            <strong>Cookies essenciais:</strong> necessários para o funcionamento da plataforma, como manutenção
+            de sessão autenticada. Não podem ser desativados.
+          </li>
+          <li>
+            <strong>Cookies de preferência:</strong> lembram suas configurações e preferências de uso
+            (ex.: idioma, configurações de exibição).
+          </li>
+          <li>
+            <strong>Cookies analíticos:</strong> coletam dados anonimizados sobre o uso do site para
+            nos ajudar a melhorar o serviço. Podem ser desativados sem prejuízo funcional.
+          </li>
+        </ul>
+        <p>
+          Você pode gerenciar ou desativar cookies nas configurações do seu navegador. Note que a desativação
+          de cookies essenciais pode impedir o acesso à área autenticada.
+        </p>
+      </section>
+
+      <!-- 8. MENORES -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s8">
+        <div class="section-badge"><span class="badge-num">08</span> Menores de idade</div>
+        <h2>Proteção de <em>menores</em></h2>
+        <div class="ink-divider"></div>
+        <div class="highlight-card warn">
+          <span class="card-icon"><i class="fas fa-child" aria-hidden="true"></i></span>
+          <p>
+            Nossos serviços são destinados exclusivamente a <strong>maiores de 18 anos</strong>.
+            Não coletamos intencionalmente dados de menores de idade. Caso identifiquemos que dados
+            de menores foram fornecidos sem o consentimento dos responsáveis, os excluiremos imediatamente.
+          </p>
+        </div>
+        <p>
+          Se você acredita que coletamos dados de uma criança ou adolescente inadvertidamente,
+          entre em contato conosco imediatamente pelo e-mail indicado na seção de contato.
+        </p>
+      </section>
+
+      <!-- 9. ALTERAÇÕES -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s9">
+        <div class="section-badge"><span class="badge-num">09</span> Atualizações</div>
+        <h2>Alterações nesta <em>política</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Podemos atualizar esta Política de Privacidade periodicamente para refletir mudanças em nossas
+          práticas, legislação aplicável ou melhorias em nossos serviços.
+        </p>
+        <p>
+          Sempre que houver alterações relevantes, notificaremos os usuários cadastrados por e-mail
+          e/ou exibiremos um aviso destacado na plataforma com no mínimo <strong>10 dias de antecedência</strong>
+          antes da entrada em vigor das mudanças.
+        </p>
+        <p>
+          A data da última atualização está sempre indicada no topo desta página.
+          O uso continuado da plataforma após a vigência das alterações implica aceite dos novos termos.
+        </p>
+      </section>
+
+      <!-- 10. CONTATO -->
+      <div class="section-sep"></div>
+
+      <section class="priv-section reveal" id="s10">
+        <div class="section-badge"><span class="badge-num">10</span> Contato &amp; DPO</div>
+        <h2>Entre em <em>contato</em></h2>
+        <div class="ink-divider"></div>
+        <p>
+          Para exercer seus direitos, esclarecer dúvidas ou reportar qualquer questão relacionada ao
+          tratamento de seus dados pessoais, entre em contato com nosso Encarregado de Dados:
+        </p>
+
+        <div class="contact-box">
+          <h3>Casa <em>Nanquim</em> — Encarregado de Dados</h3>
+          <p>Respondemos em até 15 dias úteis. Você também pode nos contatar pelas redes sociais.</p>
+          <a href="mailto:privacidade@casananquim.com.br">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            privacidade@casananquim.com.br
+          </a>
+          &nbsp;&nbsp;
+          <a href="https://www.instagram.com/casananquim/" target="_blank" rel="noopener" style="margin-top:10px;">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+            @casananquim
+          </a>
+        </div>
+
+        <p style="margin-top:24px; font-size:.83rem;">
+          Você também pode registrar reclamações diretamente na
+          <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong>:
+          <a href="https://www.gov.br/anpd" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600;">
+            www.gov.br/anpd
+          </a>.
+        </p>
+      </section>
+
+    </main>
+  </div><!-- /priv-layout -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="img/logooficial.png" alt="Casa Nanquim"
+             onerror="this.style.display='none'">
+      </div>
+      <div class="footer-tagline">Onde a tinta encontra a pele</div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/casananquim/" target="_blank" rel="noopener" aria-label="Instagram">
+          <i class="fab fa-instagram" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="footer-links">
+        <a href="index.html#inicio">Início</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#alugar">Alugar Espaço</a>
+        <a href="index.html#localizacao">Localização</a>
+        <a href="login-tatuador.html">Tatuadores</a>
+      </div>
+      <div class="footer-copy">© <span id="currentYear"></span> CASA NANQUIM — Todos os direitos reservados · Política de Privacidade em conformidade com a LGPD</div>
+    </div>
+  </footer>
+
+</div><!-- /content -->
+
+<script>
+  /* ano atual */
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+  /* navbar scroll */
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  /* reveal ao scroll */
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal, .reveal-left').forEach(el => revealObs.observe(el));
+
+  /* índice lateral — destaque de seção ativa */
+  const sections  = document.querySelectorAll('.priv-section');
+  const tocLinks  = document.querySelectorAll('.toc a');
+  const tocObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const link = document.querySelector('.toc a[href="#' + e.target.id + '"]');
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => tocObs.observe(s));
+
+  /* menu mobile */
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks   = document.getElementById('navLinks');
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const icon = menuToggle.querySelector('i');
+      const isOpen = navLinks.classList.contains('active');
+      icon.classList.toggle('fa-bars', !isOpen);
+      icon.classList.toggle('fa-times', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+  }
+  window.fecharMenu = function() {
+    if (!navLinks || !menuToggle) return;
+    navLinks.classList.remove('active');
+    const icon = menuToggle.querySelector('i');
+    if (icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
+    document.body.style.overflow = '';
+  };
+  document.addEventListener('click', (e) => {
+    if (navLinks && menuToggle && !navLinks.contains(e.target) && !menuToggle.contains(e.target)) {
+      if (navLinks.classList.contains('active')) window.fecharMenu();
+    }
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768 && navLinks?.classList.contains('active')) window.fecharMenu();
+  });
+</script>
+</body>
+</html>
