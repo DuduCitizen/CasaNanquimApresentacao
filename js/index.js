@@ -39,14 +39,14 @@ document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => 
 
 (function() {
   const FOTOS = [
-    { src: 'img/1.jpeg',  alt: 'Tatuagem 1' },
-    { src: 'img/2.jpeg', alt: 'Tatuagem 2' },
-    { src: 'img/3.jpeg', alt: 'Tatuagem 3' },
-    { src: 'img/4.jpeg', alt: 'Tatuagem 4' },
-    { src: 'img/5.jpeg', alt: 'Tatuagem 5' },
-    { src: 'img/6.jpeg', alt: 'Tatuagem 6' },
-    { src: 'img/7.jpeg', alt: 'Tatuagem 7' },
-    { src: 'img/8.jpeg', alt: 'Tatuagem 8' },
+    { src: 'img/1.jpeg',  alt: 'Tatuagem colorida no antebraço: crânio com máscara de demônio nas cores azul e vermelho vibrantes, estilo neotradicional com efeito derretido' },
+    { src: 'img/2.jpeg', alt: 'Tatuagem blackwork no joelho e perna: polvo realista com tentáculos envolvendo o joelho e bússola detalhada no olho, estilo pontilhismo' },
+    { src: 'img/3.jpeg', alt: 'Tatuagem realista no antebraço: retrato em formato de panorâmica horizontal com olhos femininos detalhados em preto e cinza, estilo fine line' },
+    { src: 'img/4.jpeg', alt: 'Tatuagem colorida no braço: personagens do anime A Viagem de Chihiro — Chihiro, Sem-Face, dragão Haku e bolinhas de fuligem, fundo em aquarela roxo' },
+    { src: 'img/5.jpeg', alt: 'Tatuagem blackwork na coxa: escorpião detalhado com cauda erguida, efeito de faísca e traços finos em preto e cinza, estilo pontilhismo' },
+    { src: 'img/6.jpeg', alt: 'Tatuagem blackwork na perna: personagens do anime One Piece — Luffy com chapéu de palha e Tony Tony Chopper em preto e cinza, estilo mangá' },
+    { src: 'img/7.jpeg', alt: 'Tatuagem blackwork no ombro: escorpião visto de cima com pinças abertas, detalhe de estrela e lua crescente, traço limpo em preto e cinza' },
+    { src: 'img/8.jpeg', alt: 'Tatuagem blackwork no braço: rosto de leopardo com manchas detalhadas, cercado por peônias e folhagens em preto e cinza, estilo realista' },
   ];
 
   function shuffle(arr) {
