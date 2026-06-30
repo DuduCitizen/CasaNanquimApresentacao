@@ -56,8 +56,7 @@ O projeto une duas frentes em um só site:
 - **HTML5** — estrutura das páginas
 - **CSS3** — estilo visual e responsividade
 - **JavaScript** — interatividade, formulários e lógica das reservas
-- **Font Awesome** — ícones
-- **Google Fonts** (Cormorant Garamond, DM Sans) — tipografia
+- **Java** — tipografia
 
 Projeto totalmente front-end (estático), sem necessidade de backend dedicado para rodar localmente.
 
@@ -78,32 +77,14 @@ CasaNanquimApresentacao/
 └── LICENSE
 ```
 
-## 🚀 Como rodar localmente
-
-Como é um projeto estático, basta abrir o `index.html` em um navegador ou usar um servidor local simples:
-
-```bash
-# Clone o repositório
-git clone https://github.com/DuduCitizen/CasaNanquimApresentacao.git
-cd CasaNanquimApresentacao
-
-# Opção 1: abra o index.html direto no navegador
-
-# Opção 2: suba um servidor local (exemplo com Python)
-python3 -m http.server 8000
-```
-
-Depois acesse `http://localhost:8000` no navegador.
-
 ## 🌐 Deploy
 
 O site está publicado via **GitHub Pages**:
 👉 https://duducitizen.github.io/CasaNanquimApresentacao/
 
-## 📍 Localização do estúdio
+## 📍 Observação
 
-R. José Mascarenhas, 1051 — Vila Matilde, São Paulo — SP, 03515-000
-Funcionamento: Segunda a Sábado, 09h às 20h
+A parte do Back-End não está funcional (Cadastro, agendamento, login, etc.), pois não é possível hospedar no Github
 
 ## 📄 Licença
 
