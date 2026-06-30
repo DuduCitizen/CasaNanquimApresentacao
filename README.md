@@ -83,24 +83,6 @@ CasaNanquimApresentacao/
 └── LICENSE
 ```
 
-## 🚀 Como rodar localmente
-
-### Front-end (interface)
-Como é uma interface estática, basta abrir o `index.html` em um navegador ou usar um servidor local simples:
-
-```bash
-# Clone o repositório
-git clone https://github.com/DuduCitizen/CasaNanquimApresentacao.git
-cd CasaNanquimApresentacao
-
-# Opção 1: abra o index.html direto no navegador
-
-# Opção 2: suba um servidor local (exemplo com Python)
-python3 -m http.server 8000
-```
-
-Depois acesse `http://localhost:8000` no navegador.
-
 ### Back-end (funcionalidades reais)
 Para que login, reservas e demais funcionalidades funcionem de verdade, é necessário também rodar o back-end em **Java**, conectado a um banco **MySQL**, localmente ou em algum serviço de hospedagem compatível (já que o GitHub Pages não suporta isso).
 
