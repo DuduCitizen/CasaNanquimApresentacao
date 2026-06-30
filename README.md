@@ -53,12 +53,18 @@ O projeto une duas frentes em um só site:
 
 ## 🛠️ Tecnologias utilizadas
 
+**Front-end** (publicado no GitHub Pages):
 - **HTML5** — estrutura das páginas
 - **CSS3** — estilo visual e responsividade
-- **JavaScript** — interatividade, formulários e lógica das reservas
-- **Java** — tipografia
+- **JavaScript** — interatividade e formulários
+- **Font Awesome** — ícones
+- **Google Fonts** (Cormorant Garamond, DM Sans) — tipografia
 
-Projeto totalmente front-end (estático), sem necessidade de backend dedicado para rodar localmente.
+**Back-end**:
+- **Java**
+- **MySQL** (banco de dados)
+
+> ⚠️ **Aviso sobre o ambiente publicado:** o GitHub Pages hospeda apenas arquivos estáticos (HTML/CSS/JS) e **não tem suporte para rodar aplicações em Java nem bancos de dados MySQL**. Por isso, o back-end deste projeto **não está hospedado** e, consequentemente, **a parte funcional do sistema (login real, persistência de reservas, regras de negócio) não funciona na versão publicada** — apenas a interface (front-end) está disponível online. Para testar o sistema completo, é necessário rodar o back-end localmente (veja a seção abaixo).
 
 ## 📂 Estrutura do projeto
 
@@ -77,14 +83,38 @@ CasaNanquimApresentacao/
 └── LICENSE
 ```
 
+## 🚀 Como rodar localmente
+
+### Front-end (interface)
+Como é uma interface estática, basta abrir o `index.html` em um navegador ou usar um servidor local simples:
+
+```bash
+# Clone o repositório
+git clone https://github.com/DuduCitizen/CasaNanquimApresentacao.git
+cd CasaNanquimApresentacao
+
+# Opção 1: abra o index.html direto no navegador
+
+# Opção 2: suba um servidor local (exemplo com Python)
+python3 -m http.server 8000
+```
+
+Depois acesse `http://localhost:8000` no navegador.
+
+### Back-end (funcionalidades reais)
+Para que login, reservas e demais funcionalidades funcionem de verdade, é necessário também rodar o back-end em **Java**, conectado a um banco **MySQL**, localmente ou em algum serviço de hospedagem compatível (já que o GitHub Pages não suporta isso).
+
 ## 🌐 Deploy
 
-O site está publicado via **GitHub Pages**:
+O **front-end** está publicado via **GitHub Pages**:
 👉 https://duducitizen.github.io/CasaNanquimApresentacao/
 
-## 📍 Observação
+⚠️ Por limitação do GitHub Pages (que não roda Java/MySQL), o **back-end não está hospedado**. A versão publicada mostra apenas a interface visual do site — as funcionalidades que dependem do back-end ainda não estão ativas online.
 
-A parte do Back-End não está funcional (Cadastro, agendamento, login, etc.), pois não é possível hospedar no Github
+## 📍 Localização do estúdio
+
+R. José Mascarenhas, 1051 — Vila Matilde, São Paulo — SP, 03515-000
+Funcionamento: Segunda a Sábado, 09h às 20h
 
 ## 📄 Licença
 
