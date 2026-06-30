@@ -93,11 +93,6 @@ O **front-end** está publicado via **GitHub Pages**:
 
 ⚠️ Por limitação do GitHub Pages (que não roda Java/MySQL), o **back-end não está hospedado**. A versão publicada mostra apenas a interface visual do site — as funcionalidades que dependem do back-end ainda não estão ativas online.
 
-## 📍 Localização do estúdio
-
-R. José Mascarenhas, 1051 — Vila Matilde, São Paulo — SP, 03515-000
-Funcionamento: Segunda a Sábado, 09h às 20h
-
 ## 📄 Licença
 
 Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
